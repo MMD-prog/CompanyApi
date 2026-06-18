@@ -5,7 +5,7 @@ const registerRoutes = require('./Routes');
 const app = express();
 
 app.use(express.json());
-sequelize.sync({alter: true})
+sequelize.sync()
     .then(() => {
         console.log('Database connected.');
         registerRoutes(app);

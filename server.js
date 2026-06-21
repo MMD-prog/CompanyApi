@@ -2,18 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const { sequelize } = require('./lib');
 const registerRoutes = require('./Routes');
-const swaggerUi = require('swagger-ui-express');
-const swaggerOptions = require('./config/swagger');
 
 const app = express();
 
 app.use(express.json());
-
-app.get('/swagger.json', (req, res) => {
-    res.json(swaggerOptions);
-});
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
 
 sequelize.sync({ alter: true })
     .then(() => {

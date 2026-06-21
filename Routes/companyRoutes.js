@@ -7,16 +7,18 @@ const router = express.Router();
  * @swagger
  * /companies:
  *   get:
- *     summary: Get all companies
- *     tags:
- *       - Companies
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         required: false
+ *         schema:
+ *           type: string
+ *          example: BAE
  *     responses:
  *       200:
  *         description: List of companies
  *       404:
  *         description: No companies found
- *       500:
- *         description: Internal server error
  */
 router.get('/', controller.getAll);
 
@@ -24,12 +26,9 @@ router.get('/', controller.getAll);
  * @swagger
  * /companies/{id}:
  *   get:
- *     summary: Get company by ID
- *     tags:
- *       - Companies
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: id 
  *         required: true
  *         schema:
  *           type: integer
@@ -47,9 +46,6 @@ router.get('/:id', controller.getById);
  * @swagger
  * /companies:
  *   post:
- *     summary: Create a company
- *     tags:
- *       - Companies
  *     requestBody:
  *       required: true
  *       content:
@@ -61,13 +57,13 @@ router.get('/:id', controller.getById);
  *             properties:
  *               name:
  *                 type: string
- *                 example: OpenAI
+ *                 example: SwaggerDefault
  *               email:
  *                 type: string
- *                 example: contact@openai.com
+ *                 example: swagger@contact.com
  *               address:
  *                 type: string
- *                 example: San Francisco, CA
+ *                 example: KHBP
  *     responses:
  *       201:
  *         description: Company created successfully
@@ -80,9 +76,6 @@ router.post('/', controller.create);
  * @swagger
  * /companies/{id}:
  *   put:
- *     summary: Update a company
- *     tags:
- *       - Companies
  *     parameters:
  *       - in: path
  *         name: id
@@ -116,9 +109,6 @@ router.put('/:id', controller.update);
  * @swagger
  * /companies/{id}:
  *   delete:
- *     summary: Delete a company
- *     tags:
- *       - Companies
  *     parameters:
  *       - in: path
  *         name: id

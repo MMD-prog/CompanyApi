@@ -8,12 +8,11 @@ const router = express.Router();
  * /companies:
  *   get:
  *     parameters:
- *       - in: query
+ *         in: query
  *         name: search
  *         required: false
  *         schema:
  *           type: string
- *          example: BAE
  *     responses:
  *       200:
  *         description: List of companies

@@ -6,7 +6,6 @@ const options = {
         info: {
             title: 'Company API',
             version: '1.0.0',
-            description: 'Company and Employee Management API'
         },
         servers: [
             {
@@ -17,6 +16,6 @@ const options = {
     apis: ['./Routes/*.js']
 };
 
-const swaggerSpec = swaggerJsdoc(options);
+const swaggerOptions = swaggerJsdoc(options);
 
-module.exports = swaggerSpec;
+module.exports = swaggerOptions;

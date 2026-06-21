@@ -7,16 +7,18 @@ const router = express.Router();
  * @swagger
  * /employees:
  *   get:
- *     summary: Get all employees
- *     tags:
- *       - Employees
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         required: false
+ *         schema:
+ *           type: string
+ *         example: Mousa
  *     responses:
  *       200:
  *         description: List of employees
  *       404:
  *         description: No employees found matching the search criteria
- *       500:
- *         description: Internal server error
  */
 router.get('/', controller.getAll);
 
@@ -24,9 +26,6 @@ router.get('/', controller.getAll);
  * @swagger
  * /employees/{id}:
  *   get:
- *     summary: Get employee by ID
- *     tags:
- *       - Employees
  *     parameters:
  *       - in: path
  *         name: id
@@ -47,9 +46,6 @@ router.get('/:id', controller.getById);
  * @swagger
  * /employees:
  *   post:
- *     summary: Create an employee
- *     tags:
- *       - Employees
  *     requestBody:
  *       required: true
  *       content:
@@ -81,9 +77,6 @@ router.post('/', controller.create);
  * @swagger
  * /employees/{id}:
  *   put:
- *     summary: Update an employee
- *     tags:
- *       - Employees
  *     parameters:
  *       - in: path
  *         name: id
@@ -117,9 +110,6 @@ router.put('/:id', controller.update);
  * @swagger
  * /employees/{id}:
  *   delete:
- *     summary: Delete an employee
- *     tags:
- *       - Employees
  *     parameters:
  *       - in: path
  *         name: id

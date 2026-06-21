@@ -12,13 +12,14 @@ exports.getAll = async (req, res) => {
                     { address: { [Op.like]: `%${search}%` } }
                 ]
             } : {}
+
         });
 
         if (search && companies.length === 0) {
             return res.status(404).json({ error: 'No companies found matching your search' });
         }
 
-        res.json(companies);
+        res.status(200).json(companies);
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -33,7 +34,7 @@ exports.getById = async (req, res) => {
             return res.status(404).json({ error: 'Company not found' });
         }
 
-        res.json(company);
+        res.status(200).json(company);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -58,7 +59,7 @@ exports.update = async (req, res) => {
         }
 
         await company.update(req.body);
-        res.json(company);
+        res.status(200).json(company);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

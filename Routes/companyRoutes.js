@@ -18,7 +18,10 @@ const router = express.Router();
  *         description: List of companies
  *       404:
  *         description: No companies found
+ *       500:
+ *        description: Internal server error
  */
+
 router.get('/', controller.getAll);
 
 /**
@@ -115,7 +118,7 @@ router.put('/:id', controller.update);
  *         schema:
  *           type: integer
  *     responses:
- *       200:
+ *       204:
  *         description: Company deleted successfully
  *       404:
  *         description: Company not found

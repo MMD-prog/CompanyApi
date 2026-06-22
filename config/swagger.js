@@ -1,21 +1,6 @@
-const swaggerJsdoc = require('swagger-jsdoc');
+const path = require('path');
+const YAML = require('yamljs');
 
-const options = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Company API',
-            version: '1.0.0',
-        },
-        servers: [
-            {
-                url: process.env.APP_URL
-            }
-        ]
-    },
-    apis: ['./Routes/*.js']
-};
-
-const swaggerOptions = swaggerJsdoc(options);
+const swaggerOptions = YAML.load(path.join(__dirname, 'swagger.yaml'));
 
 module.exports = swaggerOptions;

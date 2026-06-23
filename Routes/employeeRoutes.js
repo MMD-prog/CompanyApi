@@ -3,10 +3,185 @@ const controller = require('../Controllers/employeeController');
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /employees:
+ *   get:
+ *     tags:
+ *       - Employees
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         required: false
+ *         schema:
+ *           type: string
+ *         example: Mousa
+ *       - in: query
+ *         name: offset
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         example: 0
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         example: 10
+ *     responses:
+ *       '200':
+ *         description: List of employees
+ *         content:
+ *           application/json:
+ *             example:
+ *               total: 30
+ *               offset: 0
+ *               limit: 10
+ *               data:
+ *                 - id: 1
+ *                   name: Mousa Estefan
+ *                   email: mousa@test.com
+ *                   company_id: 1
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/',    controller.getAll);
+
+/**
+ * @swagger
+ * /employees/{id}:
+ *   get:
+ *     tags:
+ *       - Employees
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: Employee found
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: Mousa Estefan
+ *               email: mousa@test.com
+ *               company_id: 1
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/:id', controller.getById);
+
+/**
+ * @swagger
+ * /employees:
+ *   post:
+ *     tags:
+ *       - Employees
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - company_id
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Mousa Estefan
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: mousa@test.com
+ *               company_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       '201':
+ *         description: Employee created successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: Mousa Estefan
+ *               email: mousa@test.com
+ *               company_id: 1
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
+ */
 router.post('/',   controller.create);
+
+/**
+ * @swagger
+ * /employees/{id}:
+ *   put:
+ *     tags:
+ *       - Employees
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               company_id:
+ *                 type: integer
+ *     responses:
+ *       '200':
+ *         description: Employee updated successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: Updated Employee
+ *               email: updated@test.com
+ *               company_id: 1
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
+ */
 router.put('/:id', controller.update);
+
+/**
+ * @swagger
+ * /employees/{id}:
+ *   delete:
+ *     tags:
+ *       - Employees
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '204':
+ *         description: Employee deleted successfully
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
+ */
 router.delete('/:id', controller.remove);
 
 module.exports = router;

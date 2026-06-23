@@ -16,6 +16,7 @@ const Company = sequelize.define('Company', {
 }, {
     tableName: 'companies',
     timestamps: true,
+    paranoid: true,
     underscored: true,
     updatedAt: false,
     indexes: [

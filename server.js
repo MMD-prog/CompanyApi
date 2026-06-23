@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./config/swagger');
 const express = require('express');
 const { sequelize } = require('./lib');
 const registerRoutes = require('./Routes');

@@ -103,6 +103,12 @@ router.get('/:id', controller.getById);
  *               address:
  *                 type: string
  *                 example: KHBP
+ *               categoryIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 2]
+ *                 description: Optional array of category IDs to link to this company
  *     responses:
  *       '201':
  *         description: Company created successfully
@@ -113,6 +119,9 @@ router.get('/:id', controller.getById);
  *               name: SwaggerDefault
  *               email: swagger@contact.com
  *               address: KHBP
+ *               Categories:
+ *                 - id: 1
+ *                   name: tech
  *       '500':
  *         $ref: '#/components/responses/InternalServerError'
  */
@@ -144,6 +153,12 @@ router.post('/',   controller.create);
  *                 format: email
  *               address:
  *                 type: string
+ *               categoryIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 3]
+ *                 description: Replaces all linked categories with this new list
  *     responses:
  *       '200':
  *         description: Company updated successfully

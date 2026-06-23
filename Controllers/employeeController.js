@@ -2,24 +2,38 @@ const { Op, Employee } = require('../lib');
 
 exports.getAll = async (req, res) => {
     try {
-        const { search } = req.query;
+        const { search, offset, limit } = req.query;
 
-        const employees = await Employee.findAll({
+        const limitNum  = parseInt(limit)  || 10;
+        const offsetNum = parseInt(offset) || 0;
+
+        const { count, rows: employees } = await Employee.findAndCountAll({
             where: search ? {
                 [Op.or]: [
                     { name:  { [Op.like]: `%${search}%` } },
                     { email: { [Op.like]: `%${search}%` } }
                 ]
-            } : {}
+            } : {},
+            limit:  limitNum,
+            offset: offsetNum
         });
+
         if (search && employees.length === 0) {
             return res.status(404).json({ error: 'No employees found matching your search' });
         }
-        res.json(employees);
+
+        res.status(200).json({
+            total:  count,
+            offset: offsetNum,
+            limit:  limitNum,
+            data:   employees
+        });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
 exports.getById = async (req, res) => {
     try {
         const employee = await Employee.findByPk(req.params.id);
@@ -28,7 +42,7 @@ exports.getById = async (req, res) => {
             return res.status(404).json({ error: 'Employee not found' });
         }
 
-        res.json(employee);
+        res.status(200).json(employee);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -42,6 +56,7 @@ exports.create = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
 exports.update = async (req, res) => {
     try {
         const employee = await Employee.findByPk(req.params.id);
@@ -51,12 +66,12 @@ exports.update = async (req, res) => {
         }
 
         await employee.update(req.body);
-        res.json(employee);
-        
+        res.status(200).json(employee);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
 exports.remove = async (req, res) => {
     try {
         const employee = await Employee.findByPk(req.params.id);

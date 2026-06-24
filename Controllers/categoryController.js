@@ -26,8 +26,6 @@ exports.remove = async (req, res) => {
             return res.status(404).json({ error: 'Category not found' });
         }
 
-        // Destroying the category removes it from the junction table automatically.
-        // Companies that had this category are completely unaffected.
         await category.destroy();
         res.status(204).send();
     } catch (err) {

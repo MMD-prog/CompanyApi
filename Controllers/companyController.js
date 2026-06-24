@@ -59,12 +59,10 @@ exports.create = async (req, res) => {
         const { categoryIds, ...companyData } = req.body;
         const company = await Company.create(companyData);
 
-        // Link categories if provided
         if (categoryIds && categoryIds.length > 0) {
             await company.setCategories(categoryIds);
         }
 
-        // Reload with categories included in response
         const result = await Company.findByPk(company.id, {
             include: [{ model: Category, through: { attributes: [] } }]
         });
@@ -86,12 +84,10 @@ exports.update = async (req, res) => {
         const { categoryIds, ...companyData } = req.body;
         await company.update(companyData);
 
-        // Replace all category links if provided
         if (categoryIds !== undefined) {
             await company.setCategories(categoryIds);
         }
 
-        // Reload with categories included in response
         const result = await Company.findByPk(company.id, {
             include: [{ model: Category, through: { attributes: [] } }]
         });
@@ -110,7 +106,7 @@ exports.remove = async (req, res) => {
             return res.status(404).json({ error: 'Company not found' });
         }
 
-        await company.destroy();
+             await company.destroy();
         res.status(204).send();
     } catch (err) {
         res.status(500).json({ error: err.message });

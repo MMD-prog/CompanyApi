@@ -1,4 +1,4 @@
-const { Op, Company } = require('../lib');
+const { Op, Company, Employee } = require('../lib');
 
 exports.getAll = async (req, res) => {
     try {
@@ -82,6 +82,7 @@ exports.remove = async (req, res) => {
             return res.status(404).json({ error: 'Company not found' });
         }
 
+        await Employee.destroy({ where: { company_id: company.id } });
         await company.destroy();
         res.status(204).send();
     } catch (err) {

@@ -5,8 +5,6 @@ const Category = require('./category');
 Company.hasMany(Employee, { foreignKey: 'company_id', onDelete: 'CASCADE' });
 Employee.belongsTo(Company, { foreignKey: 'company_id' });
 
-// Many-to-Many: a company can have multiple categories and vice versa
-// Deleting a category only removes rows from the junction table, companies are unaffected
 Company.belongsToMany(Category, {
     through: 'company_categories',
     foreignKey: 'company_id',

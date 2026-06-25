@@ -7,6 +7,8 @@ const router = express.Router();
  * @swagger
  * /employees:
  *   get:
+ *     tags:
+ *       - Employees
  *     parameters:
  *       - in: query
  *         name: search
@@ -14,18 +16,45 @@ const router = express.Router();
  *         schema:
  *           type: string
  *         example: Mousa
+ *       - in: query
+ *         name: offset
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         example: 0
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         example: 10
  *     responses:
- *       200:
+ *       '200':
  *         description: List of employees
- *       404:
- *         description: No employees found matching the search criteria
+ *         content:
+ *           application/json:
+ *             example:
+ *               total: 30
+ *               offset: 0
+ *               limit: 10
+ *               data:
+ *                 - id: 1
+ *                   name: Mousa Estefan
+ *                   email: mousa@test.com
+ *                   company_id: 1
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
-router.get('/', controller.getAll);
+router.get('/',    controller.getAll);
 
 /**
  * @swagger
  * /employees/{id}:
  *   get:
+ *     tags:
+ *       - Employees
  *     parameters:
  *       - in: path
  *         name: id
@@ -33,12 +62,19 @@ router.get('/', controller.getAll);
  *         schema:
  *           type: integer
  *     responses:
- *       200:
+ *       '200':
  *         description: Employee found
- *       404:
- *         description: Employee not found
- *       500:
- *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: Mousa Estefan
+ *               email: mousa@test.com
+ *               company_id: 1
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/:id', controller.getById);
 
@@ -46,6 +82,8 @@ router.get('/:id', controller.getById);
  * @swagger
  * /employees:
  *   post:
+ *     tags:
+ *       - Employees
  *     requestBody:
  *       required: true
  *       content:
@@ -61,22 +99,32 @@ router.get('/:id', controller.getById);
  *                 example: Mousa Estefan
  *               email:
  *                 type: string
+ *                 format: email
  *                 example: mousa@test.com
  *               company_id:
  *                 type: integer
  *                 example: 1
  *     responses:
- *       201:
+ *       '201':
  *         description: Employee created successfully
- *       500:
- *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: Mousa Estefan
+ *               email: mousa@test.com
+ *               company_id: 1
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/', controller.create);
+router.post('/',   controller.create);
 
 /**
  * @swagger
  * /employees/{id}:
  *   put:
+ *     tags:
+ *       - Employees
  *     parameters:
  *       - in: path
  *         name: id
@@ -94,15 +142,23 @@ router.post('/', controller.create);
  *                 type: string
  *               email:
  *                 type: string
+ *                 format: email
  *               company_id:
  *                 type: integer
  *     responses:
- *       200:
+ *       '200':
  *         description: Employee updated successfully
- *       404:
- *         description: Employee not found
- *       500:
- *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: Updated Employee
+ *               email: updated@test.com
+ *               company_id: 1
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.put('/:id', controller.update);
 
@@ -110,6 +166,8 @@ router.put('/:id', controller.update);
  * @swagger
  * /employees/{id}:
  *   delete:
+ *     tags:
+ *       - Employees
  *     parameters:
  *       - in: path
  *         name: id
@@ -117,12 +175,12 @@ router.put('/:id', controller.update);
  *         schema:
  *           type: integer
  *     responses:
- *       204:
+ *       '204':
  *         description: Employee deleted successfully
- *       404:
- *         description: Employee not found
- *       500:
- *         description: Internal server error
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.delete('/:id', controller.remove);
 

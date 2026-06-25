@@ -7,40 +7,74 @@ const router = express.Router();
  * @swagger
  * /companies:
  *   get:
+ *     tags:
+ *       - Companies
  *     parameters:
- *         in: query
+ *       - in: query
  *         name: search
  *         required: false
  *         schema:
  *           type: string
+ *         example: BAE
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         example: 10
  *     responses:
- *       200:
+ *       '200':
  *         description: List of companies
- *       404:
- *         description: No companies found
- *       500:
- *        description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               total: 42
+ *               page: 1
+ *               totalPages: 5
+ *               data:
+ *                 - id: 1
+ *                   name: BAE
+ *                   email: contact@bae.com
+ *                   address: KHBP
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
-
-router.get('/', controller.getAll);
+router.get('/',    controller.getAll);
 
 /**
  * @swagger
  * /companies/{id}:
  *   get:
+ *     tags:
+ *       - Companies
  *     parameters:
  *       - in: path
- *         name: id 
+ *         name: id
  *         required: true
  *         schema:
  *           type: integer
  *     responses:
- *       200:
+ *       '200':
  *         description: Company found
- *       404:
- *         description: Company not found
- *       500:
- *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: BAE
+ *               email: contact@bae.com
+ *               address: KHBP
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.get('/:id', controller.getById);
 
@@ -48,6 +82,8 @@ router.get('/:id', controller.getById);
  * @swagger
  * /companies:
  *   post:
+ *     tags:
+ *       - Companies
  *     requestBody:
  *       required: true
  *       content:
@@ -62,22 +98,41 @@ router.get('/:id', controller.getById);
  *                 example: SwaggerDefault
  *               email:
  *                 type: string
+ *                 format: email
  *                 example: swagger@contact.com
  *               address:
  *                 type: string
  *                 example: KHBP
+ *               categoryIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 2]
+ *                 description: Optional array of category IDs to link to this company
  *     responses:
- *       201:
+ *       '201':
  *         description: Company created successfully
- *       500:
- *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: SwaggerDefault
+ *               email: swagger@contact.com
+ *               address: KHBP
+ *               Categories:
+ *                 - id: 1
+ *                   name: tech
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
-router.post('/', controller.create);
+router.post('/',   controller.create);
 
 /**
  * @swagger
  * /companies/{id}:
  *   put:
+ *     tags:
+ *       - Companies
  *     parameters:
  *       - in: path
  *         name: id
@@ -95,15 +150,29 @@ router.post('/', controller.create);
  *                 type: string
  *               email:
  *                 type: string
+ *                 format: email
  *               address:
  *                 type: string
+ *               categoryIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 3]
+ *                 description: Replaces all linked categories with this new list
  *     responses:
- *       200:
+ *       '200':
  *         description: Company updated successfully
- *       404:
- *         description: Company not found
- *       500:
- *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: Updated Company
+ *               email: updated@company.com
+ *               address: New Address
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.put('/:id', controller.update);
 
@@ -111,6 +180,8 @@ router.put('/:id', controller.update);
  * @swagger
  * /companies/{id}:
  *   delete:
+ *     tags:
+ *       - Companies
  *     parameters:
  *       - in: path
  *         name: id
@@ -118,12 +189,12 @@ router.put('/:id', controller.update);
  *         schema:
  *           type: integer
  *     responses:
- *       204:
+ *       '204':
  *         description: Company deleted successfully
- *       404:
- *         description: Company not found
- *       500:
- *         description: Internal server error
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '500':
+ *         $ref: '#/components/responses/InternalServerError'
  */
 router.delete('/:id', controller.remove);
 

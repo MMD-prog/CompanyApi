@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
 const sequelize = require('./db');
-const { Company, Employee } = require('./models');
+const { Company, Employee, Category } = require('./models');
 
-module.exports = { Op, sequelize, Company, Employee };
+module.exports = { Op, sequelize, Company, Employee, Category };

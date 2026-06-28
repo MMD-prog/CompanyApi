@@ -1,4 +1,4 @@
-const { Op, Company, Employee } = require('../lib');
+const { Op, Company, Category } = require('../lib');
 
 exports.getAll = async (req, res) => {
     try {
@@ -16,8 +16,10 @@ exports.getAll = async (req, res) => {
                     { address: { [Op.like]: `%${search}%` } }
                 ]
             } : {},
+            include: [{ model: Category, through: { attributes: [] } }],
             limit:  limitNum,
-            offset
+            offset,
+            distinct: true
         });
 
         if (search && companies.length === 0) {
@@ -38,7 +40,9 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
     try {
-        const company = await Company.findByPk(req.params.id);
+        const company = await Company.findByPk(req.params.id, {
+            include: [{ model: Category, through: { attributes: [] } }]
+        });
 
         if (!company) {
             return res.status(404).json({ error: 'Company not found' });
@@ -52,8 +56,18 @@ exports.getById = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        const company = await Company.create(req.body);
-        res.status(201).json(company);
+        const { categoryIds, ...companyData } = req.body;
+        const company = await Company.create(companyData);
+
+        if (categoryIds && categoryIds.length > 0) {
+            await company.setCategories(categoryIds);
+        }
+
+        const result = await Company.findByPk(company.id, {
+            include: [{ model: Category, through: { attributes: [] } }]
+        });
+
+        res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -67,8 +81,18 @@ exports.update = async (req, res) => {
             return res.status(404).json({ error: 'Company not found' });
         }
 
-        await company.update(req.body);
-        res.status(200).json(company);
+        const { categoryIds, ...companyData } = req.body;
+        await company.update(companyData);
+
+        if (categoryIds !== undefined) {
+            await company.setCategories(categoryIds);
+        }
+
+        const result = await Company.findByPk(company.id, {
+            include: [{ model: Category, through: { attributes: [] } }]
+        });
+
+        res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -82,8 +106,7 @@ exports.remove = async (req, res) => {
             return res.status(404).json({ error: 'Company not found' });
         }
 
-        await Employee.destroy({ where: { company_id: company.id } });
-        await company.destroy();
+             await company.destroy();
         res.status(204).send();
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -17,6 +17,7 @@ const Employee = sequelize.define('Employee', {
 }, {
     tableName: 'employees',
     timestamps: true,
+    paranoid: true,
     underscored: true,
     updatedAt: false
 });

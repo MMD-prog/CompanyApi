@@ -16,32 +16,25 @@ const options = {
             }
         ],
         tags: [
-            { name: 'Auth',       description: 'Authentication endpoints' },
             { name: 'Companies',  description: 'Company endpoints' },
             { name: 'Employees',  description: 'Employee endpoints' },
             { name: 'Categories', description: 'Category endpoints' }
         ],
         components: {
-            securitySchemes: {
-                BearerAuth: {
-                    type: 'http',
-                    scheme: 'bearer',
-                    bearerFormat: 'JWT'
-                }
-            },
             responses: {
-                InternalServerError: {
-                    description: 'Internal server error',
+                BadRequestError: {
+                    description: 'Request failed fallback',
                     content: {
                         'application/json': {
                             example: {
-                                error: 'Internal server error'
+                                error: 'Request Failed',
+                                message: 'Unable to process request due to bad input data structure.'
                             }
                         }
                     }
                 },
                 NotFoundError: {
-                    description: 'Not found',
+                    description: 'Resource not found',
                     content: {
                         'application/json': {
                             example: {
@@ -49,15 +42,39 @@ const options = {
                             }
                         }
                     }
+                },
+                ValidationError: {
+                    description: 'Data values fail validation constraints',
+                    content: {
+                        'application/json': {
+                            example: {
+                                error: 'Validation failed',
+                                details: [
+                                    'email must be a valid email',
+                                    'name cannot be null'
+                                ]
+                            }
+                        }
+                    }
+                },
+                ConflictError: {
+                    description: 'Unique data attribute conflict',
+                    content: {
+                        'application/json': {
+                            example: {
+                                error: 'Data conflict',
+                                message: 'A record with this unique attribute already exists.'
+                            }
+                        }
+                    }
                 }
             }
-        },
-        security: [{ BearerAuth: [] }]
+        }
     },
     apis: ['./Routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
-const outputPath = path.join(__dirname,'../swagger.json');
+const outputPath = path.join(__dirname, '../swagger.json');
 fs.writeFileSync(outputPath, JSON.stringify(swaggerSpec, null, 2));

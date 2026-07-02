@@ -30,7 +30,7 @@ exports.getAll = async (req, res) => {
             return res.status(404).json({ error: 'No companies found matching your search' });
         }
 
-        res.status(206).json({
+        res.status(200).json({
             total:      count,
             page:       pageNum,
             totalPages: Math.ceil(count / limitNum),
@@ -38,7 +38,10 @@ exports.getAll = async (req, res) => {
         });
 
     } catch (err) {
-        res.status(503).json({ error: err.message });
+        res.status(400).json({ 
+            error: 'Request Failed', 
+            message: 'Unable to fetch companies due to invalid query parameters.' 
+        });
     }
 };
 
@@ -53,8 +56,12 @@ exports.getById = async (req, res) => {
         }
 
         res.status(200).json(company);
+        
     } catch (err) {
-        res.status(503).json({ error: err.message });
+        res.status(400).json({ 
+            error: 'Request Failed', 
+            message: 'Invalid company ID format provided.' 
+        });
     }
 };
 
@@ -69,9 +76,26 @@ exports.create = async (req, res) => {
 
         company.dataValues.Categories = await company.getCategories({ joinTableAttributes: [] });
 
-        res.status(202).json(company);
+        res.status(201).json(company);
     } catch (err) {
-        res.status(422).json({ error: err.message });
+        if (err.name === 'SequelizeValidationError') {
+            return res.status(422).json({ 
+                error: 'Validation failed', 
+                details: err.errors.map(e => e.message) 
+            });
+        }
+
+        if (err.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).json({ 
+                error: 'Data conflict', 
+                message: 'A company with this unique record already exists.' 
+            });
+        }
+
+        res.status(400).json({ 
+            error: 'Request Failed', 
+            message: 'Unable to process company creation due to bad input data structure.' 
+        });
     }
 };
 
@@ -92,9 +116,27 @@ exports.update = async (req, res) => {
 
         company.dataValues.Categories = await company.getCategories({ joinTableAttributes: [] });
 
-        res.status(204).send();
+        res.status(200).json(company);
+        
     } catch (err) {
-        res.status(503).json({ error: err.message });
+        if (err.name === 'SequelizeValidationError') {
+            return res.status(422).json({ 
+                error: 'Validation failed', 
+                details: err.errors.map(e => e.message) 
+            });
+        }
+
+        if (err.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).json({ 
+                error: 'Data conflict', 
+                message: 'This update conflicts with an existing unique record.' 
+            });
+        }
+
+        res.status(400).json({ 
+            error: 'Request Failed', 
+            message: 'Unable to process company update due to bad input formatting.' 
+        });
     }
 };
 
@@ -103,12 +145,15 @@ exports.remove = async (req, res) => {
         const company = await Company.findByPk(req.params.id);
 
         if (!company) {
-            return res.status(410).json({ error: 'Company not found' });
+            return res.status(404).json({ error: 'Company not found' });
         }
 
-             await company.destroy();
+        await company.destroy();
         res.status(204).send();
     } catch (err) {
-        res.status(503).json({ error: err.message });
+        res.status(400).json({ 
+            error: 'Request Failed', 
+            message: 'Invalid company ID format or database restriction prevented deletion.' 
+        });
     }
 };

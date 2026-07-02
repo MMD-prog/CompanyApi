@@ -12,6 +12,10 @@
   ],
   "tags": [
     {
+      "name": "Auth",
+      "description": "Authentication endpoints"
+    },
+    {
       "name": "Companies",
       "description": "Company endpoints"
     },
@@ -25,6 +29,13 @@
     }
   ],
   "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "responses": {
       "InternalServerError": {
         "description": "Internal server error",
@@ -48,6 +59,11 @@
       }
     }
   },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
   "paths": {
     "/employees": {
       "get": {
@@ -662,6 +678,6 @@
           }
         }
       }
-    },
+    }
   }
 }

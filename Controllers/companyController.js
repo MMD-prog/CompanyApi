@@ -1,4 +1,5 @@
 const { Op, Company, Category } = require('../lib');
+const { formatCompany } = require('../DTOs/company.dto');
 
 exports.getAll = async (req, res) => {
     try {
@@ -34,7 +35,7 @@ exports.getAll = async (req, res) => {
             total:      count,
             page:       pageNum,
             totalPages: Math.ceil(count / limitNum),
-            data:       companies
+            data:       companies.map(formatCompany)
         });
 
     } catch (err) {
@@ -55,7 +56,7 @@ exports.getById = async (req, res) => {
             return res.status(404).json({ error: 'Company not found' });
         }
 
-        res.status(200).json(company);
+        res.status(200).json(formatCompany(company));
         
     } catch (err) {
         res.status(400).json({ 

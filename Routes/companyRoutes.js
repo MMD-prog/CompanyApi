@@ -20,9 +20,9 @@ const router = express.Router();
  *         name: category
  *         required: false
  *         schema:
- *           type: string
- *           description: Filter companies by category name
- *           example: tech
+ *           type: integer
+ *           description: Filter companies by category ID
+ *           example: 1
  *       - in: query
  *         name: page
  *         required: false
@@ -45,10 +45,13 @@ const router = express.Router();
  *               page: 1
  *               totalPages: 5
  *               data:
- *                 - id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *                 - id: 'Xk9PZ'
  *                   name: BAE
  *                   email: contact@bae.com
  *                   address: KHBP
+ *                   category:
+ *                     - id: 1
+ *                       name: tech
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  *       '400':
@@ -68,14 +71,14 @@ router.get('/', controller.getAll);
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
+ *           description: hashed ID
  *     responses:
  *       '200':
  *         description: Company found
  *         content:
  *           application/json:
  *             example:
- *               id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               id: 'Xk9PZ'
  *               name: BAE
  *               email: contact@bae.com
  *               address: KHBP
@@ -114,9 +117,8 @@ router.get('/:id', controller.getById);
  *               categoryIds:
  *                 type: array
  *                 items:
- *                   type: string
- *                   format: uuid
- *                 example: ['d290f1ee-6c54-4b01-90e6-d701748f0851']
+ *                   type: integer
+ *                   example: 1
  *                 description: Optional array of category IDs to link to this company
  *     responses:
  *       '201':
@@ -124,12 +126,12 @@ router.get('/:id', controller.getById);
  *         content:
  *           application/json:
  *             example:
- *               id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               id: 'Xk9PZ'
  *               name: SwaggerDefault
  *               email: swagger@contact.com
  *               address: KHBP
- *               Categories:
- *                 - id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               category:
+ *                 - id: 1
  *                   name: tech
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
@@ -152,7 +154,7 @@ router.post('/', controller.create);
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
+ *           description: hashed ID
  *     requestBody:
  *       required: true
  *       content:
@@ -170,9 +172,8 @@ router.post('/', controller.create);
  *               categoryIds:
  *                 type: array
  *                 items:
- *                   type: string
- *                   format: uuid
- *                 example: ['d290f1ee-6c54-4b01-90e6-d701748f0851']
+ *                   type: integer
+ *                   example: 1
  *                 description: Replaces all linked categories with this new list
  *     responses:
  *       '200':
@@ -180,7 +181,7 @@ router.post('/', controller.create);
  *         content:
  *           application/json:
  *             example:
- *               id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               id: 'Xk9PZ'
  *               name: Updated Company
  *               email: updated@company.com
  *               address: New Address
@@ -207,7 +208,7 @@ router.put('/:id', controller.update);
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
+ *           description: hashed ID
  *     responses:
  *       '204':
  *         description: Company deleted successfully

@@ -1,5 +1,6 @@
 const { Op, Company, Category } = require('../lib');
-const { formatCompany } = require('../DTOs/company.dto');
+const { formatCompany, formatCompanyArray } = require('../DTOs/company.dto');
+const { decodeId } = require('../Hashing/idHasher');
 
 exports.getAll = async (req, res) => {
     try {
@@ -20,7 +21,7 @@ exports.getAll = async (req, res) => {
             include: [{
                 model: Category,
                 through: { attributes: [] },
-                ...(category ? { where: { name: { [Op.like]: `%${category}%` } } } : {})
+                ...(category ? { where: { id: parseInt(category) } } : {})
             }],
             limit:  limitNum,
             offset,
@@ -35,7 +36,7 @@ exports.getAll = async (req, res) => {
             total:      count,
             page:       pageNum,
             totalPages: Math.ceil(count / limitNum),
-            data:       companies.map(formatCompany)
+            data:       formatCompanyArray(companies)
         });
 
     } catch (err) {
@@ -48,7 +49,10 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
     try {
-        const company = await Company.findByPk(req.params.id, {
+        const decodedId = decodeId(req.params.id);
+        if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+
+        const company = await Company.findByPk(decodedId, {
             include: [{ model: Category, through: { attributes: [] } }]
         });
 
@@ -59,6 +63,7 @@ exports.getById = async (req, res) => {
         res.status(200).json(formatCompany(company));
         
     } catch (err) {
+        console.error("GET BY ID ERROR:", err);
         res.status(400).json({ 
             error: 'Request Failed', 
             message: 'Invalid company ID format provided.' 
@@ -74,10 +79,10 @@ exports.create = async (req, res) => {
         if (categoryIds && categoryIds.length > 0) {
             await company.setCategories(categoryIds);
         }
-
+        
         company.dataValues.Categories = await company.getCategories({ joinTableAttributes: [] });
 
-        res.status(201).json(company);
+        res.status(201).json(formatCompany(company));
     } catch (err) {
         if (err.name === 'SequelizeValidationError') {
             return res.status(422).json({ 
@@ -102,7 +107,10 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        const company = await Company.findByPk(req.params.id);
+        const decodedId = decodeId(req.params.id);
+        if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+
+        const company = await Company.findByPk(decodedId);
 
         if (!company) {
             return res.status(404).json({ error: 'Company not found' });
@@ -117,7 +125,7 @@ exports.update = async (req, res) => {
 
         company.dataValues.Categories = await company.getCategories({ joinTableAttributes: [] });
 
-        res.status(200).json(company);
+        res.status(200).json(formatCompany(company));
         
     } catch (err) {
         if (err.name === 'SequelizeValidationError') {
@@ -143,7 +151,10 @@ exports.update = async (req, res) => {
 
 exports.remove = async (req, res) => {
     try {
-        const company = await Company.findByPk(req.params.id);
+        const decodedId = decodeId(req.params.id);
+        if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+
+        const company = await Company.findByPk(decodedId);
 
         if (!company) {
             return res.status(404).json({ error: 'Company not found' });

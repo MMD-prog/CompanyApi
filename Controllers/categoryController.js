@@ -1,9 +1,10 @@
 const { Category } = require('../lib');
+const { formatCategory, formatCategoryArray } = require('../DTOs/category.dto');
 
 exports.getAll = async (req, res) => {
     try {
         const categories = await Category.findAll();
-        res.status(200).json(categories);
+        res.status(200).json(formatCategoryArray(categories));
     } catch (err) {
         res.status(400).json({ 
             error: 'Request Failed', 
@@ -15,7 +16,7 @@ exports.getAll = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const category = await Category.create(req.body);
-        res.status(201).json(category);
+        res.status(201).json(formatCategory(category));
     } catch (err) {
         if (err.name === 'SequelizeValidationError') {
             return res.status(422).json({ 
@@ -51,7 +52,7 @@ exports.remove = async (req, res) => {
     } catch (err) {
         res.status(400).json({ 
             error: 'Request Failed', 
-            message: 'Invalid category ID format or database restriction prevented deletion.' 
+            message: 'Invalid category ID or database restriction prevented deletion.' 
         });
     }
 };

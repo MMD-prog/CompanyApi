@@ -16,9 +16,9 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             example:
- *               - id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               - id: 1
  *                 name: tech
- *               - id: '3874e4db-3eb3-4db0-9377-511ceba772e0'
+ *               - id: 2
  *                 name: frontend
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
@@ -50,7 +50,7 @@ router.get('/', controller.getAll);
  *         content:
  *           application/json:
  *             example:
- *               id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               id: 1
  *               name: tech
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
@@ -74,8 +74,8 @@ router.post('/', controller.create);
  *         name: id
  *         required: true
  *         schema:
- *           type: string
- *           format: uuid
+ *           type: integer
+ *           example: 1
  *     responses:
  *       '204':
  *         description: Category deleted successfully

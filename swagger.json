@@ -120,10 +120,10 @@
                   "limit": 10,
                   "data": [
                     {
-                      "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                      "id": "Xk9PZ",
                       "name": "Mousa Estefan",
                       "email": "mousa@test.com",
-                      "company_id": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                      "company_id": "aBcD12"
                     }
                   ]
                 }
@@ -164,8 +164,8 @@
                   },
                   "company_id": {
                     "type": "string",
-                    "format": "uuid",
-                    "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                    "description": "hashed ID",
+                    "example": "aBcD12"
                   }
                 }
               }
@@ -178,10 +178,10 @@
             "content": {
               "application/json": {
                 "example": {
-                  "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                  "id": "Xk9PZ",
                   "name": "Mousa Estefan",
                   "email": "mousa@test.com",
-                  "company_id": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                  "company_id": "aBcD12"
                 }
               }
             }
@@ -210,7 +210,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "description": "hashed ID"
             }
           }
         ],
@@ -220,10 +220,10 @@
             "content": {
               "application/json": {
                 "example": {
-                  "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                  "id": "Xk9PZ",
                   "name": "Mousa Estefan",
                   "email": "mousa@test.com",
-                  "company_id": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                  "company_id": "aBcD12"
                 }
               }
             }
@@ -247,7 +247,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "description": "hashed ID"
             }
           }
         ],
@@ -269,8 +269,8 @@
                   },
                   "company_id": {
                     "type": "string",
-                    "format": "uuid",
-                    "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                    "description": "hashed ID",
+                    "example": "aBcD12"
                   }
                 }
               }
@@ -283,10 +283,10 @@
             "content": {
               "application/json": {
                 "example": {
-                  "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                  "id": "Xk9PZ",
                   "name": "Updated Employee",
                   "email": "updated@test.com",
-                  "company_id": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                  "company_id": "aBcD12"
                 }
               }
             }
@@ -316,7 +316,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "description": "hashed ID"
             }
           }
         ],
@@ -353,9 +353,9 @@
             "name": "category",
             "required": false,
             "schema": {
-              "type": "string",
-              "description": "Filter companies by category name",
-              "example": "tech"
+              "type": "integer",
+              "description": "Filter companies by category ID",
+              "example": 1
             }
           },
           {
@@ -388,10 +388,16 @@
                   "totalPages": 5,
                   "data": [
                     {
-                      "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                      "id": "Xk9PZ",
                       "name": "BAE",
                       "email": "contact@bae.com",
-                      "address": "KHBP"
+                      "address": "KHBP",
+                      "category": [
+                        {
+                          "id": 1,
+                          "name": "tech"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -436,12 +442,9 @@
                   "categoryIds": {
                     "type": "array",
                     "items": {
-                      "type": "string",
-                      "format": "uuid"
+                      "type": "integer",
+                      "example": 1
                     },
-                    "example": [
-                      "d290f1ee-6c54-4b01-90e6-d701748f0851"
-                    ],
                     "description": "Optional array of category IDs to link to this company"
                   }
                 }
@@ -455,13 +458,13 @@
             "content": {
               "application/json": {
                 "example": {
-                  "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                  "id": "Xk9PZ",
                   "name": "SwaggerDefault",
                   "email": "swagger@contact.com",
                   "address": "KHBP",
-                  "Categories": [
+                  "category": [
                     {
-                      "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                      "id": 1,
                       "name": "tech"
                     }
                   ]
@@ -493,7 +496,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "description": "hashed ID"
             }
           }
         ],
@@ -503,7 +506,7 @@
             "content": {
               "application/json": {
                 "example": {
-                  "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                  "id": "Xk9PZ",
                   "name": "BAE",
                   "email": "contact@bae.com",
                   "address": "KHBP"
@@ -530,7 +533,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "description": "hashed ID"
             }
           }
         ],
@@ -554,12 +557,9 @@
                   "categoryIds": {
                     "type": "array",
                     "items": {
-                      "type": "string",
-                      "format": "uuid"
+                      "type": "integer",
+                      "example": 1
                     },
-                    "example": [
-                      "d290f1ee-6c54-4b01-90e6-d701748f0851"
-                    ],
                     "description": "Replaces all linked categories with this new list"
                   }
                 }
@@ -573,7 +573,7 @@
             "content": {
               "application/json": {
                 "example": {
-                  "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                  "id": "Xk9PZ",
                   "name": "Updated Company",
                   "email": "updated@company.com",
                   "address": "New Address"
@@ -606,7 +606,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "description": "hashed ID"
             }
           }
         ],
@@ -636,11 +636,11 @@
               "application/json": {
                 "example": [
                   {
-                    "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                    "id": 1,
                     "name": "tech"
                   },
                   {
-                    "id": "3874e4db-3eb3-4db0-9377-511ceba772e0",
+                    "id": 2,
                     "name": "frontend"
                   }
                 ]
@@ -682,7 +682,7 @@
             "content": {
               "application/json": {
                 "example": {
-                  "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                  "id": 1,
                   "name": "tech"
                 }
               }
@@ -713,8 +713,8 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "example": 1
             }
           }
         ],

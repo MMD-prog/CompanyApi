@@ -38,10 +38,10 @@ const router = express.Router();
  *               offset: 0
  *               limit: 10
  *               data:
- *                 - id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *                 - id: 'Xk9PZ'
  *                   name: Mousa Estefan
  *                   email: mousa@test.com
- *                   company_id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *                   company_id: 'aBcD12'
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  *       '400':
@@ -61,17 +61,17 @@ router.get('/', controller.getAll);
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
+ *           description: hashed ID
  *     responses:
  *       '200':
  *         description: Employee found
  *         content:
  *           application/json:
  *             example:
- *               id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               id: 'Xk9PZ'
  *               name: Mousa Estefan
  *               email: mousa@test.com
- *               company_id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               company_id: 'aBcD12'
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  *       '400':
@@ -104,18 +104,18 @@ router.get('/:id', controller.getById);
  *                 example: mousa@test.com
  *               company_id:
  *                 type: string
- *                 format: uuid
- *                 example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *                 description: hashed ID
+ *                 example: 'aBcD12'
  *     responses:
  *       '201':
  *         description: Employee created successfully
  *         content:
  *           application/json:
  *             example:
- *               id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               id: 'Xk9PZ'
  *               name: Mousa Estefan
  *               email: mousa@test.com
- *               company_id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               company_id: 'aBcD12'
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  *       '422':
@@ -137,7 +137,7 @@ router.post('/', controller.create);
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
+ *           description: hashed ID
  *     requestBody:
  *       required: true
  *       content:
@@ -154,18 +154,18 @@ router.post('/', controller.create);
  *                 example: updated@test.com
  *               company_id:
  *                 type: string
- *                 format: uuid
- *                 example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *                 description: hashed ID
+ *                 example: 'aBcD12'
  *     responses:
  *       '200':
  *         description: Employee updated successfully
  *         content:
  *           application/json:
  *             example:
- *               id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               id: 'Xk9PZ'
  *               name: Updated Employee
  *               email: updated@test.com
- *               company_id: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+ *               company_id: 'aBcD12'
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  *       '400':
@@ -189,7 +189,7 @@ router.put('/:id', controller.update);
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
+ *           description: hashed ID
  *     responses:
  *       '204':
  *         description: Employee deleted successfully

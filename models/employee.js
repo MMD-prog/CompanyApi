@@ -3,8 +3,8 @@ const sequelize = require('../db');
 
 const Employee = sequelize.define('Employee', {
     id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true
     },
     name: {
@@ -16,7 +16,7 @@ const Employee = sequelize.define('Employee', {
         validate: { isEmail: true }
     },
     company_id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         references: { model: 'companies', key: 'id' }
     }
 }, {

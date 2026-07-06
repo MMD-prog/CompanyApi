@@ -1,4 +1,6 @@
 const { Op, Employee } = require('../lib');
+const { formatEmployee, formatEmployeeArray } = require('../DTOs/employee.dto');
+const { decodeId } = require('../Hashing/idHasher');
 
 exports.getAll = async (req, res) => {
     try {
@@ -26,7 +28,7 @@ exports.getAll = async (req, res) => {
             total:  count,
             offset: offsetNum,
             limit:  limitNum,
-            data:   employees
+            data:   formatEmployeeArray(employees)
         });
 
     } catch (err) {
@@ -39,13 +41,16 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
     try {
-        const employee = await Employee.findByPk(req.params.id);
+        const decodedId = decodeId(req.params.id);
+        if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+
+        const employee = await Employee.findByPk(decodedId);
 
         if (!employee) {
             return res.status(404).json({ error: 'Employee not found' });
         }
 
-        res.status(200).json(employee);
+        res.status(200).json(formatEmployee(employee));
     } catch (err) {
         res.status(400).json({ 
             error: 'Request Failed', 
@@ -56,8 +61,9 @@ exports.getById = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        const employee = await Employee.create(req.body);
-        res.status(201).json(employee);
+        const payload = { ...req.body };
+        const employee = await Employee.create(payload);
+        res.status(201).json(formatEmployee(employee));
     } catch (err) {
         if (err.name === 'SequelizeValidationError') {
             return res.status(422).json({ 
@@ -82,14 +88,19 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        const employee = await Employee.findByPk(req.params.id);
+        const decodedId = decodeId(req.params.id);
+        if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+
+        const employee = await Employee.findByPk(decodedId);
 
         if (!employee) {
             return res.status(404).json({ error: 'Employee not found' });
         }
 
-        await employee.update(req.body);
-        res.status(200).json(employee);
+        const payload = { ...req.body };
+
+        await employee.update(payload);
+        res.status(200).json(formatEmployee(employee));
     } catch (err) {
         if (err.name === 'SequelizeValidationError') {
             return res.status(422).json({ 
@@ -114,7 +125,10 @@ exports.update = async (req, res) => {
 
 exports.remove = async (req, res) => {
     try {
-        const employee = await Employee.findByPk(req.params.id);
+        const decodedId = decodeId(req.params.id);
+        if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+
+        const employee = await Employee.findByPk(decodedId);
 
         if (!employee) {
             return res.status(404).json({ error: 'Employee not found' });

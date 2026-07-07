@@ -12,6 +12,7 @@ sequelize.sync({ alter: true })
     .then(() => {
         console.log('Database connected.');
         registerRoutes(app);
+        app.use(require('./middleware/errorHandler').errorHandler);
         app.listen(process.env.PORT, () => {
             console.log(`Server running on ${process.env.APP_URL}`);
         });

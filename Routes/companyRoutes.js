@@ -1,5 +1,6 @@
 const express = require('express');
 const controller = require('../Controllers/companyController');
+const { errorContext } = require('../middleware/errorHandler');
 
 const router = express.Router();
 
@@ -57,7 +58,9 @@ const router = express.Router();
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */
-router.get('/', controller.getAll);
+router.get('/', errorContext({
+    fallbackMessage: 'Unable to fetch companies due to invalid query parameters.'
+}), controller.getAll);
 
 /**
  * @swagger
@@ -87,7 +90,9 @@ router.get('/', controller.getAll);
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */
-router.get('/:id', controller.getById);
+router.get('/:id', errorContext({
+    fallbackMessage: 'Invalid company ID format provided.'
+}), controller.getById);
 
 /**
  * @swagger
@@ -140,7 +145,10 @@ router.get('/:id', controller.getById);
  *       '409':
  *         $ref: '#/components/responses/ConflictError'
  */
-router.post('/', controller.create);
+router.post('/', errorContext({
+    fallbackMessage: 'Unable to process company creation due to bad input data structure.',
+    uniqueMessage: 'A company with this unique record already exists.'
+}), controller.create);
 
 /**
  * @swagger
@@ -194,7 +202,68 @@ router.post('/', controller.create);
  *       '409':
  *         $ref: '#/components/responses/ConflictError'
  */
-router.put('/:id', controller.update);
+router.put('/:id', errorContext({
+    fallbackMessage: 'Unable to process company update due to bad input formatting.',
+    uniqueMessage: 'This update conflicts with an existing unique record.'
+}), controller.update);
+
+/**
+ * @swagger
+ * /companies/{id}:
+ *   patch:
+ *     tags:
+ *       - Companies
+ *     summary: Partially update a company
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: hashed ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               address:
+ *                 type: string
+ *               categoryIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                   example: 1
+ *                 description: Replaces all linked categories with this new list
+ *     responses:
+ *       '200':
+ *         description: Company updated successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 'Xk9PZ'
+ *               name: Updated Company
+ *               email: updated@company.com
+ *               address: New Address
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
+ *       '422':
+ *         $ref: '#/components/responses/ValidationError'
+ *       '409':
+ *         $ref: '#/components/responses/ConflictError'
+ */
+router.patch('/:id', errorContext({
+    fallbackMessage: 'Unable to process company patch due to bad input formatting.',
+    uniqueMessage: 'This update conflicts with an existing unique record.'
+}), controller.patch);
 
 /**
  * @swagger
@@ -217,6 +286,8 @@ router.put('/:id', controller.update);
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */
-router.delete('/:id', controller.remove);
+router.delete('/:id', errorContext({
+    fallbackMessage: 'Invalid company ID format or database restriction prevented deletion.'
+}), controller.remove);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const express = require('express');
 const controller = require('../Controllers/categoryController');
+const { errorContext } = require('../middleware/errorHandler');
 
 const router = express.Router();
 
@@ -23,7 +24,9 @@ const router = express.Router();
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */
-router.get('/', controller.getAll);
+router.get('/', errorContext({
+    fallbackMessage: 'Unable to fetch categories due to an unexpected system error.'
+}), controller.getAll);
 
 /**
  * @swagger
@@ -59,7 +62,102 @@ router.get('/', controller.getAll);
  *       '409':
  *         $ref: '#/components/responses/ConflictError'
  */
-router.post('/', controller.create);
+router.post('/', errorContext({
+    fallbackMessage: 'Unable to process category creation due to bad input data structure.',
+    uniqueMessage: 'A category with this name already exists.'
+}), controller.create);
+
+/**
+ * @swagger
+ * /categories/{id}:
+ *   put:
+ *     tags:
+ *       - Categories
+ *     summary: Fully update a category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Updated Category
+ *     responses:
+ *       '200':
+ *         description: Category updated successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: Updated Category
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
+ *       '422':
+ *         $ref: '#/components/responses/ValidationError'
+ *       '409':
+ *         $ref: '#/components/responses/ConflictError'
+ */
+router.put('/:id', errorContext({
+    fallbackMessage: 'Unable to process category update due to bad input formatting.',
+    uniqueMessage: 'A category with this name already exists.'
+}), controller.update);
+
+/**
+ * @swagger
+ * /categories/{id}:
+ *   patch:
+ *     tags:
+ *       - Categories
+ *     summary: Partially update a category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Updated Category
+ *     responses:
+ *       '200':
+ *         description: Category patched successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: Updated Category
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
+ *       '422':
+ *         $ref: '#/components/responses/ValidationError'
+ *       '409':
+ *         $ref: '#/components/responses/ConflictError'
+ */
+router.patch('/:id', errorContext({
+    fallbackMessage: 'Unable to process category patch due to bad input formatting.',
+    uniqueMessage: 'A category with this name already exists.'
+}), controller.patch);
 
 /**
  * @swagger
@@ -84,6 +182,8 @@ router.post('/', controller.create);
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */
-router.delete('/:id', controller.remove);
+router.delete('/:id', errorContext({
+    fallbackMessage: 'Invalid category ID or database restriction prevented deletion.'
+}), controller.remove);
 
 module.exports = router;

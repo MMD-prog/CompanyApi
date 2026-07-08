@@ -33,7 +33,7 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
     const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const employee = await Employee.findByPk(decodedId);
 
@@ -52,7 +52,7 @@ exports.create = async (req, res) => {
 
 exports.patch = async (req, res) => {
     const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+    if (!decodedId) return res.status(404).json({ error: 'Invalid ID format' });
 
     const employee = await Employee.findByPk(decodedId);
 
@@ -68,7 +68,7 @@ exports.patch = async (req, res) => {
 
 exports.update = async (req, res) => {
     const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+    if (!decodedId) return res.status(404).json({ error: 'Invalid ID format' });
 
     const employee = await Employee.findByPk(decodedId);
 
@@ -88,7 +88,7 @@ exports.update = async (req, res) => {
 
 exports.remove = async (req, res) => {
     const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+    if (!decodedId) return res.status(404).json({ error: 'Invalid ID format' });
 
     const employee = await Employee.findByPk(decodedId);
 

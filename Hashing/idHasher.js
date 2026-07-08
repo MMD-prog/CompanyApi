@@ -13,8 +13,7 @@ const decodeId = (hash) => {
     if (!hash || typeof hash !== 'string') return null;
     const numbers = sqids.decode(hash);
     if (numbers.length === 0) return null;
-    
-    if (sqids.encode(numbers) !== hash) return null;
+
     return numbers[0];
 };
 

@@ -41,7 +41,7 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
     const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const company = await Company.findByPk(decodedId, {
         include: [{ model: Category, through: { attributes: [] } }]
@@ -69,7 +69,7 @@ exports.create = async (req, res) => {
 
 exports.patch = async (req, res) => {
     const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const company = await Company.findByPk(decodedId);
 
@@ -91,7 +91,7 @@ exports.patch = async (req, res) => {
 
 exports.update = async (req, res) => {
     const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const company = await Company.findByPk(decodedId);
 
@@ -120,7 +120,7 @@ exports.update = async (req, res) => {
 
 exports.remove = async (req, res) => {
     const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(400).json({ error: 'Invalid ID format' });
+    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const company = await Company.findByPk(decodedId);
 

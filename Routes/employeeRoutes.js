@@ -81,7 +81,7 @@ router.get('/', errorContext({
  *         $ref: '#/components/responses/BadRequestError'
  */
 router.get('/:id', errorContext({
-    fallbackMessage: 'Invalid employee ID format provided.'
+    fallbackMessage: 'An unexpected error occurred while fetching the employee.'
 }), controller.getById);
 
 /**
@@ -129,8 +129,8 @@ router.get('/:id', errorContext({
  *         $ref: '#/components/responses/ConflictError'
  */
 router.post('/', errorContext({
-    fallbackMessage: 'Unable to process employee creation due to bad input data structure.',
-    uniqueMessage: 'An employee with this unique record already exists.'
+    fallbackMessage: 'An unexpected error occurred while creating the employee.',
+    uniqueMessage: 'An employee with this email already exists.'
 }), controller.create);
 
 /**
@@ -184,8 +184,8 @@ router.post('/', errorContext({
  *         $ref: '#/components/responses/ConflictError'
  */
 router.put('/:id', errorContext({
-    fallbackMessage: 'Unable to process employee update due to bad input formatting.',
-    uniqueMessage: 'This update conflicts with an existing unique record.'
+    fallbackMessage: 'An unexpected error occurred while updating the employee.',
+    uniqueMessage: 'An employee with this email already exists.'
 }), controller.update);
 
 /**
@@ -240,8 +240,8 @@ router.put('/:id', errorContext({
  *         $ref: '#/components/responses/ConflictError'
  */
 router.patch('/:id', errorContext({
-    fallbackMessage: 'Unable to process employee patch due to bad input formatting.',
-    uniqueMessage: 'This update conflicts with an existing unique record.'
+    fallbackMessage: 'An unexpected error occurred while updating the employee.',
+    uniqueMessage: 'An employee with this email already exists.'
 }), controller.patch);
 
 /**
@@ -266,7 +266,7 @@ router.patch('/:id', errorContext({
  *         $ref: '#/components/responses/BadRequestError'
  */
 router.delete('/:id', errorContext({
-    fallbackMessage: 'Invalid employee ID format or database restriction prevented deletion.'
+    fallbackMessage: 'An unexpected error occurred while deleting the employee.'
 }), controller.remove);
 
 module.exports = router;

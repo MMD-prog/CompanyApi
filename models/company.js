@@ -25,7 +25,8 @@ const Company = sequelize.define('Company', {
     underscored: true,
     updatedAt: true,
     defaultScope: {
-        attributes: { exclude: ['deletedAt', 'deleted_at'] }
+        attributes: { exclude: ['deletedAt', 'deleted_at'] },
+        order: [['id', 'ASC']]
     },
     indexes: [
         {

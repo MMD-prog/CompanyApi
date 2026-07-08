@@ -12,7 +12,10 @@ exports.create = async (req, res) => {
 };
 
 exports.patch = async (req, res) => {
-    const category = await Category.findByPk(req.params.id);
+    const id = parseInt(req.params.id);
+    if (isNaN(id) || id < 1) return res.status(400).json({ error: 'Invalid ID format' });
+
+    const category = await Category.findByPk(id);
 
     if (!category) {
         return res.status(404).json({ error: 'Category not found' });
@@ -23,7 +26,10 @@ exports.patch = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const category = await Category.findByPk(req.params.id);
+    const id = parseInt(req.params.id);
+    if (isNaN(id) || id < 1) return res.status(400).json({ error: 'Invalid ID format' });
+
+    const category = await Category.findByPk(id);
 
     if (!category) {
         return res.status(404).json({ error: 'Category not found' });
@@ -38,7 +44,10 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-    const category = await Category.findByPk(req.params.id);
+    const id = parseInt(req.params.id);
+    if (isNaN(id) || id < 1) return res.status(400).json({ error: 'Invalid ID format' });
+
+    const category = await Category.findByPk(id);
 
     if (!category) {
         return res.status(404).json({ error: 'Category not found' });

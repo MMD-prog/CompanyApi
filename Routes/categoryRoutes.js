@@ -63,7 +63,7 @@ router.get('/', errorContext({
  *         $ref: '#/components/responses/ConflictError'
  */
 router.post('/', errorContext({
-    fallbackMessage: 'Unable to process category creation due to bad input data structure.',
+    fallbackMessage: 'An unexpected error occurred while creating the category.',
     uniqueMessage: 'A category with this name already exists.'
 }), controller.create);
 
@@ -109,7 +109,7 @@ router.post('/', errorContext({
  *         $ref: '#/components/responses/ConflictError'
  */
 router.put('/:id', errorContext({
-    fallbackMessage: 'Unable to process category update due to bad input formatting.',
+    fallbackMessage: 'An unexpected error occurred while updating the category.',
     uniqueMessage: 'A category with this name already exists.'
 }), controller.update);
 
@@ -155,7 +155,7 @@ router.put('/:id', errorContext({
  *         $ref: '#/components/responses/ConflictError'
  */
 router.patch('/:id', errorContext({
-    fallbackMessage: 'Unable to process category patch due to bad input formatting.',
+    fallbackMessage: 'An unexpected error occurred while updating the category.',
     uniqueMessage: 'A category with this name already exists.'
 }), controller.patch);
 
@@ -183,7 +183,7 @@ router.patch('/:id', errorContext({
  *         $ref: '#/components/responses/BadRequestError'
  */
 router.delete('/:id', errorContext({
-    fallbackMessage: 'Invalid category ID or database restriction prevented deletion.'
+    fallbackMessage: 'An unexpected error occurred while deleting the category.'
 }), controller.remove);
 
 module.exports = router;

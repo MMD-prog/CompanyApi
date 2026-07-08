@@ -14,7 +14,10 @@ const Category = sequelize.define('Category', {
     }
 }, {
     tableName: 'categories',
-    timestamps: false
+    timestamps: false,
+    defaultScope: {
+        order: [['id', 'ASC']]
+    }
 });
 
 module.exports = Category;

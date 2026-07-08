@@ -59,7 +59,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/BadRequestError'
  */
 router.get('/', errorContext({
-    fallbackMessage: 'Unable to fetch companies due to invalid query parameters.'
+    fallbackMessage: 'An unexpected error occurred while fetching companies.'
 }), controller.getAll);
 
 /**
@@ -91,7 +91,7 @@ router.get('/', errorContext({
  *         $ref: '#/components/responses/BadRequestError'
  */
 router.get('/:id', errorContext({
-    fallbackMessage: 'Invalid company ID format provided.'
+    fallbackMessage: 'An unexpected error occurred while fetching the company.'
 }), controller.getById);
 
 /**
@@ -146,7 +146,7 @@ router.get('/:id', errorContext({
  *         $ref: '#/components/responses/ConflictError'
  */
 router.post('/', errorContext({
-    fallbackMessage: 'Unable to process company creation due to bad input data structure.',
+    fallbackMessage: 'An unexpected error occurred while creating the company.',
     uniqueMessage: 'A company with this unique record already exists.'
 }), controller.create);
 
@@ -203,7 +203,7 @@ router.post('/', errorContext({
  *         $ref: '#/components/responses/ConflictError'
  */
 router.put('/:id', errorContext({
-    fallbackMessage: 'Unable to process company update due to bad input formatting.',
+    fallbackMessage: 'An unexpected error occurred while updating the company.',
     uniqueMessage: 'This update conflicts with an existing unique record.'
 }), controller.update);
 
@@ -261,7 +261,7 @@ router.put('/:id', errorContext({
  *         $ref: '#/components/responses/ConflictError'
  */
 router.patch('/:id', errorContext({
-    fallbackMessage: 'Unable to process company patch due to bad input formatting.',
+    fallbackMessage: 'An unexpected error occurred while updating the company.',
     uniqueMessage: 'This update conflicts with an existing unique record.'
 }), controller.patch);
 
@@ -287,7 +287,7 @@ router.patch('/:id', errorContext({
  *         $ref: '#/components/responses/BadRequestError'
  */
 router.delete('/:id', errorContext({
-    fallbackMessage: 'Invalid company ID format or database restriction prevented deletion.'
+    fallbackMessage: 'An unexpected error occurred while deleting the company.'
 }), controller.remove);
 
 module.exports = router;

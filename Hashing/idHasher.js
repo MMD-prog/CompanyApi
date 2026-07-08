@@ -12,7 +12,10 @@ const encodeId = (id) => {
 const decodeId = (hash) => {
     if (!hash || typeof hash !== 'string') return null;
     const numbers = sqids.decode(hash);
-    return numbers.length > 0 ? numbers[0] : null;
+    if (numbers.length === 0) return null;
+    
+    if (sqids.encode(numbers) !== hash) return null;
+    return numbers[0];
 };
 
 module.exports = {

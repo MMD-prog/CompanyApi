@@ -26,8 +26,15 @@ const Employee = sequelize.define('Employee', {
     underscored: true,
     updatedAt: true,
     defaultScope: {
-        attributes: { exclude: ['deletedAt', 'deleted_at'] }
-    }
+        attributes: { exclude: ['deletedAt', 'deleted_at'] },
+        order: [['id', 'ASC']]
+    },
+    indexes: [
+        {
+            unique: true,
+            fields: ['email','name']
+        }
+    ]
 });
 
 module.exports = Employee;

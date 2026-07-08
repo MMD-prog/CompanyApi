@@ -13,12 +13,12 @@ const formatEmployee = (employee) => {
     };
 };
 
-const formatEmployeeArray = (employees) => {
+const FormatEmployees = (employees) => {
     if (!employees || !Array.isArray(employees)) return [];
     return employees.map(formatEmployee);
 };
 
 module.exports = {
     formatEmployee,
-    formatEmployeeArray
+    FormatEmployees
 };

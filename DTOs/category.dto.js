@@ -9,12 +9,12 @@ const formatCategory = (category) => {
     };
 };
 
-const formatCategoryArray = (categories) => {
+const FormatCategories = (categories) => {
     if (!categories || !Array.isArray(categories)) return [];
     return categories.map(formatCategory);
 };
 
 module.exports = {
     formatCategory,
-    formatCategoryArray
+    FormatCategories
 };

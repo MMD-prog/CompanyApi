@@ -1,9 +1,9 @@
 const { Category } = require('../lib');
-const { formatCategory, formatCategoryArray } = require('../DTOs/category.dto');
+const { formatCategory, FormatCategories } = require('../DTOs/category.dto');
 
 exports.getAll = async (req, res) => {
     const categories = await Category.findAll();
-    res.status(200).json(formatCategoryArray(categories));
+    res.status(200).json(FormatCategories(categories));
 };
 
 exports.create = async (req, res) => {

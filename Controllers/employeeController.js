@@ -1,5 +1,5 @@
 const { Op, Employee } = require('../lib');
-const { formatEmployee, formatEmployeeArray } = require('../DTOs/employee.dto');
+const { formatEmployee, FormatEmployees } = require('../DTOs/employee.dto');
 const { decodeId } = require('../Hashing/idHasher');
 
 exports.getAll = async (req, res) => {
@@ -27,7 +27,7 @@ exports.getAll = async (req, res) => {
         total:  count,
         offset: offsetNum,
         limit:  limitNum,
-        data:   formatEmployeeArray(employees)
+        data:   FormatEmployees(employees)
     });
 };
 

@@ -1,5 +1,5 @@
 const { Op, Company, Category } = require('../lib');
-const { formatCompany, formatCompanyArray } = require('../DTOs/company.dto');
+const { formatCompany, FormatCompanies } = require('../DTOs/company.dto');
 const { decodeId } = require('../Hashing/idHasher');
 
 exports.getAll = async (req, res) => {
@@ -35,7 +35,7 @@ exports.getAll = async (req, res) => {
         total:      count,
         page:       pageNum,
         totalPages: Math.ceil(count / limitNum),
-        data:       formatCompanyArray(companies)
+        data:       FormatCompanies(companies)
     });
 };
 

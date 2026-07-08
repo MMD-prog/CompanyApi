@@ -17,12 +17,12 @@ const formatCompany = (company) => {
     };
 };
 
-const formatCompanyArray = (companies) => {
+const FormatCompanies = (companies) => {
     if (!companies || !Array.isArray(companies)) return [];
     return companies.map(formatCompany);
 };
 
 module.exports = {
     formatCompany,
-    formatCompanyArray
+    FormatCompanies
 };

@@ -1,5 +1,6 @@
 const { Category } = require('../lib');
 const { formatCategory, FormatCategories } = require('../DTOs/category.dto');
+const { decodeId, ENTITY_TYPES } = require('../Hashing/idHasher');
 
 exports.getAll = async (req, res) => {
     const categories = await Category.findAll();
@@ -12,8 +13,8 @@ exports.create = async (req, res) => {
 };
 
 exports.patch = async (req, res) => {
-    const id = parseInt(req.params.id);
-    if (isNaN(id) || id < 1) return res.status(400).json({ error: 'Invalid ID format' });
+    const id = decodeId(req.params.id, ENTITY_TYPES.CATEGORY);
+    if (!id) return res.status(404).json({ error: 'ID not found' });
 
     const category = await Category.findByPk(id);
 
@@ -26,8 +27,8 @@ exports.patch = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const id = parseInt(req.params.id);
-    if (isNaN(id) || id < 1) return res.status(400).json({ error: 'Invalid ID format' });
+    const id = decodeId(req.params.id, ENTITY_TYPES.CATEGORY);
+    if (!id) return res.status(404).json({ error: 'ID not found' });
 
     const category = await Category.findByPk(id);
 
@@ -44,8 +45,8 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-    const id = parseInt(req.params.id);
-    if (isNaN(id) || id < 1) return res.status(400).json({ error: 'Invalid ID format' });
+    const id = decodeId(req.params.id, ENTITY_TYPES.CATEGORY);
+    if (!id) return res.status(404).json({ error: 'ID not found' });
 
     const category = await Category.findByPk(id);
 

@@ -1,6 +1,6 @@
 const { Op, Employee } = require('../lib');
 const { formatEmployee, FormatEmployees } = require('../DTOs/employee.dto');
-const { decodeId } = require('../Hashing/idHasher');
+const { decodeId, ENTITY_TYPES } = require('../Hashing/idHasher');
 
 exports.getAll = async (req, res) => {
     const { search, offset, limit } = req.query;
@@ -32,7 +32,7 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-    const decodedId = decodeId(req.params.id);
+    const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
     if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const employee = await Employee.findByPk(decodedId);
@@ -51,8 +51,8 @@ exports.create = async (req, res) => {
 };
 
 exports.patch = async (req, res) => {
-    const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(404).json({ error: 'Invalid ID format' });
+    const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
+    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const employee = await Employee.findByPk(decodedId);
 
@@ -67,8 +67,8 @@ exports.patch = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(404).json({ error: 'Invalid ID format' });
+    const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
+    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const employee = await Employee.findByPk(decodedId);
 
@@ -87,8 +87,8 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-    const decodedId = decodeId(req.params.id);
-    if (!decodedId) return res.status(404).json({ error: 'Invalid ID format' });
+    const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
+    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const employee = await Employee.findByPk(decodedId);
 

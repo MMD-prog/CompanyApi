@@ -1,6 +1,6 @@
 const { Op, Company, Category } = require('../lib');
 const { formatCompany, FormatCompanies } = require('../DTOs/company.dto');
-const { decodeId } = require('../Hashing/idHasher');
+const { decodeId, decodeIds, ENTITY_TYPES } = require('../Hashing/idHasher');
 
 exports.getAll = async (req, res) => {
     const { search, category, page, limit } = req.query;
@@ -8,6 +8,11 @@ exports.getAll = async (req, res) => {
     const pageNum  = parseInt(page)  || 1;
     const limitNum = parseInt(limit) || 10;
     const offset   = (pageNum - 1) * limitNum;
+
+    const decodedCategoryId = category ? decodeId(category, ENTITY_TYPES.CATEGORY) : null;
+    if (category && !decodedCategoryId) {
+        return res.status(404).json({ error: 'ID not found' });
+    }
 
     const { count, rows: companies } = await Company.findAndCountAll({
         where: search ? {
@@ -20,7 +25,7 @@ exports.getAll = async (req, res) => {
         include: [{
             model: Category,
             through: { attributes: [] },
-            ...(category ? { where: { id: parseInt(category) } } : {})
+            ...(decodedCategoryId ? { where: { id: decodedCategoryId } } : {})
         }],
         limit:  limitNum,
         offset,
@@ -40,7 +45,7 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-    const decodedId = decodeId(req.params.id);
+    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
     if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const company = await Company.findByPk(decodedId, {
@@ -59,7 +64,10 @@ exports.create = async (req, res) => {
     const company = await Company.create(companyData);
 
     if (categoryIds && categoryIds.length > 0) {
-        await company.setCategories(categoryIds);
+        const decodedCategoryIds = decodeIds(categoryIds, ENTITY_TYPES.CATEGORY);
+        if (!decodedCategoryIds) return res.status(404).json({ error: 'ID not found' });
+
+        await company.setCategories(decodedCategoryIds);
     }
     
     company.dataValues.Categories = await company.getCategories({ joinTableAttributes: [] });
@@ -68,7 +76,7 @@ exports.create = async (req, res) => {
 };
 
 exports.patch = async (req, res) => {
-    const decodedId = decodeId(req.params.id);
+    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
     if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const company = await Company.findByPk(decodedId);
@@ -81,7 +89,10 @@ exports.patch = async (req, res) => {
     await company.update(companyData);
 
     if (categoryIds !== undefined) {
-        await company.setCategories(categoryIds);
+        const decodedCategoryIds = decodeIds(categoryIds, ENTITY_TYPES.CATEGORY);
+        if (!decodedCategoryIds) return res.status(404).json({ error: 'ID not found' });
+
+        await company.setCategories(decodedCategoryIds);
     }
 
     company.dataValues.Categories = await company.getCategories({ joinTableAttributes: [] });
@@ -90,7 +101,7 @@ exports.patch = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const decodedId = decodeId(req.params.id);
+    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
     if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const company = await Company.findByPk(decodedId);
@@ -108,7 +119,10 @@ exports.update = async (req, res) => {
     await company.update(companyData);
 
     if (categoryIds !== undefined) {
-        await company.setCategories(categoryIds);
+        const decodedCategoryIds = decodeIds(categoryIds, ENTITY_TYPES.CATEGORY);
+        if (!decodedCategoryIds) return res.status(404).json({ error: 'ID not found' });
+
+        await company.setCategories(decodedCategoryIds);
     } else {
         await company.setCategories([]);
     }
@@ -119,7 +133,7 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-    const decodedId = decodeId(req.params.id);
+    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
     if (!decodedId) return res.status(404).json({ error: 'ID not found' });
 
     const company = await Company.findByPk(decodedId);

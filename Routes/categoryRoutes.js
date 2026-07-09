@@ -17,9 +17,9 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             example:
- *               - id: 1
+ *               - id: aZ9k2p
  *                 name: tech
- *               - id: 2
+ *               - id: xR3m1q
  *                 name: frontend
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
@@ -53,7 +53,7 @@ router.get('/', errorContext({
  *         content:
  *           application/json:
  *             example:
- *               id: 1
+ *               id: aZ9k2p
  *               name: tech
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
@@ -79,8 +79,8 @@ router.post('/', errorContext({
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: aZ9k2p
  *     requestBody:
  *       required: true
  *       content:
@@ -97,7 +97,7 @@ router.post('/', errorContext({
  *         content:
  *           application/json:
  *             example:
- *               id: 1
+ *               id: aZ9k2p
  *               name: Updated Category
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
@@ -125,8 +125,8 @@ router.put('/:id', errorContext({
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: aZ9k2p
  *     requestBody:
  *       required: true
  *       content:
@@ -143,7 +143,7 @@ router.put('/:id', errorContext({
  *         content:
  *           application/json:
  *             example:
- *               id: 1
+ *               id: aZ9k2p
  *               name: Updated Category
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
@@ -172,8 +172,8 @@ router.patch('/:id', errorContext({
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
- *           example: 1
+ *           type: string
+ *           example: aZ9k2p
  *     responses:
  *       '204':
  *         description: Category deleted successfully

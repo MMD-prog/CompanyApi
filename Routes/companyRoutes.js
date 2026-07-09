@@ -21,9 +21,9 @@ const router = express.Router();
  *         name: category
  *         required: false
  *         schema:
- *           type: integer
+ *           type: string
  *           description: Filter companies by category ID
- *           example: 1
+ *           example: aZ9k2p
  *       - in: query
  *         name: page
  *         required: false
@@ -51,7 +51,7 @@ const router = express.Router();
  *                   email: contact@bae.com
  *                   address: KHBP
  *                   category:
- *                     - id: 1
+ *                     - id: aZ9k2p
  *                       name: tech
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
@@ -122,8 +122,8 @@ router.get('/:id', errorContext({
  *               categoryIds:
  *                 type: array
  *                 items:
- *                   type: integer
- *                   example: 1
+ *                   type: string
+ *                   example: aZ9k2p
  *                 description: Optional array of category IDs to link to this company
  *     responses:
  *       '201':
@@ -136,7 +136,7 @@ router.get('/:id', errorContext({
  *               email: swagger@contact.com
  *               address: KHBP
  *               category:
- *                 - id: 1
+ *                 - id: aZ9k2p
  *                   name: tech
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
@@ -180,8 +180,8 @@ router.post('/', errorContext({
  *               categoryIds:
  *                 type: array
  *                 items:
- *                   type: integer
- *                   example: 1
+ *                   type: string
+ *                   example: aZ9k2p
  *                 description: Replaces all linked categories with this new list
  *     responses:
  *       '200':
@@ -238,8 +238,8 @@ router.put('/:id', errorContext({
  *               categoryIds:
  *                 type: array
  *                 items:
- *                   type: integer
- *                   example: 1
+ *                   type: string
+ *                   example: aZ9k2p
  *                 description: Replaces all linked categories with this new list
  *     responses:
  *       '200':

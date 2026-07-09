@@ -1,10 +1,12 @@
+const { encodeId, ENTITY_TYPES } = require('../Hashing/idHasher');
+
 const formatCategory = (category) => {
     if (!category) return null;
     
     const data = category.toJSON ? category.toJSON() : category;
 
     return {
-        id: data.id,
+        id: encodeId(data.id, ENTITY_TYPES.CATEGORY),
         name: data.name
     };
 };

@@ -36,9 +36,7 @@ exports.update = async (req, res) => {
         return res.status(404).json({ error: 'Category not found' });
     }
 
-    const payload = {
-        name: req.body.name !== undefined ? req.body.name : null
-    };
+    const payload = { ...req.body };
 
     await category.update(payload);
     res.status(200).json(formatCategory(category));

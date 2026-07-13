@@ -76,11 +76,7 @@ exports.update = async (req, res) => {
         return res.status(404).json({ error: 'Employee not found' });
     }
 
-    const payload = {
-        name: req.body.name !== undefined ? req.body.name : null,
-        email: req.body.email !== undefined ? req.body.email : null,
-        company_id: req.body.company_id !== undefined ? req.body.company_id : null
-    };
+    const payload = { ...req.body };
 
     await employee.update(payload);
     res.status(200).json(formatEmployee(employee));

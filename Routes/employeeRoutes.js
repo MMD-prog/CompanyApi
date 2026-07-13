@@ -1,6 +1,7 @@
 const express = require('express');
 const controller = require('../Controllers/employeeController');
 const { errorContext } = require('../middleware/errorHandler');
+const { validateEmployee } = require('../middleware/validators');
 
 const router = express.Router();
 
@@ -131,7 +132,7 @@ router.get('/:id', errorContext({
 router.post('/', errorContext({
     fallbackMessage: 'An unexpected error occurred while creating the employee.',
     uniqueMessage: 'An employee with this email already exists.'
-}), controller.create);
+}), validateEmployee, controller.create);
 
 /**
  * @swagger
@@ -186,7 +187,7 @@ router.post('/', errorContext({
 router.put('/:id', errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the employee.',
     uniqueMessage: 'An employee with this email already exists.'
-}), controller.update);
+}), validateEmployee, controller.update);
 
 /**
  * @swagger
@@ -242,7 +243,7 @@ router.put('/:id', errorContext({
 router.patch('/:id', errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the employee.',
     uniqueMessage: 'An employee with this email already exists.'
-}), controller.patch);
+}), validateEmployee, controller.patch);
 
 /**
  * @swagger

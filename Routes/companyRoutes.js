@@ -1,6 +1,7 @@
 const express = require('express');
 const controller = require('../Controllers/companyController');
 const { errorContext } = require('../middleware/errorHandler');
+const { validateCompany } = require('../middleware/validators');
 
 const router = express.Router();
 
@@ -148,7 +149,7 @@ router.get('/:id', errorContext({
 router.post('/', errorContext({
     fallbackMessage: 'An unexpected error occurred while creating the company.',
     uniqueMessage: 'A company with this unique record already exists.'
-}), controller.create);
+}), validateCompany, controller.create);
 
 /**
  * @swagger
@@ -205,7 +206,7 @@ router.post('/', errorContext({
 router.put('/:id', errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the company.',
     uniqueMessage: 'This update conflicts with an existing unique record.'
-}), controller.update);
+}), validateCompany, controller.update);
 
 /**
  * @swagger
@@ -263,7 +264,7 @@ router.put('/:id', errorContext({
 router.patch('/:id', errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the company.',
     uniqueMessage: 'This update conflicts with an existing unique record.'
-}), controller.patch);
+}), validateCompany, controller.patch);
 
 /**
  * @swagger

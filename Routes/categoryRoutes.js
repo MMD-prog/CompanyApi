@@ -1,6 +1,7 @@
 const express = require('express');
 const controller = require('../Controllers/categoryController');
 const { errorContext } = require('../middleware/errorHandler');
+const { validateCategory } = require('../middleware/validators');
 
 const router = express.Router();
 
@@ -65,7 +66,7 @@ router.get('/', errorContext({
 router.post('/', errorContext({
     fallbackMessage: 'An unexpected error occurred while creating the category.',
     uniqueMessage: 'A category with this name already exists.'
-}), controller.create);
+}), validateCategory, controller.create);
 
 /**
  * @swagger
@@ -111,7 +112,7 @@ router.post('/', errorContext({
 router.put('/:id', errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the category.',
     uniqueMessage: 'A category with this name already exists.'
-}), controller.update);
+}), validateCategory, controller.update);
 
 /**
  * @swagger
@@ -157,7 +158,7 @@ router.put('/:id', errorContext({
 router.patch('/:id', errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the category.',
     uniqueMessage: 'A category with this name already exists.'
-}), controller.patch);
+}), validateCategory, controller.patch);
 
 /**
  * @swagger

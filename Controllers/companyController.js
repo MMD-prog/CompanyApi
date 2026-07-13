@@ -110,12 +110,7 @@ exports.update = async (req, res) => {
         return res.status(404).json({ error: 'Company not found' });
     }
 
-    const { categoryIds } = req.body;
-    const companyData = {
-        name: req.body.name !== undefined ? req.body.name : null,
-        email: req.body.email !== undefined ? req.body.email : null,
-        address: req.body.address !== undefined ? req.body.address : null
-    };
+    const { categoryIds, ...companyData } = req.body;
     await company.update(companyData);
 
     if (categoryIds !== undefined) {

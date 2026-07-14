@@ -11,7 +11,7 @@ exports.getAll = async (req, res) => {
 
     const decodedCategoryId = category ? decodeId(category, ENTITY_TYPES.CATEGORY) : null;
     if (category && !decodedCategoryId) {
-        return res.status(404).json({ error: 'ID not found' });
+        return res.status(404).json({ error: 'Company not found' });
     }
 
     const { count, rows: companies } = await Company.findAndCountAll({
@@ -46,7 +46,7 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
     const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
-    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
+    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
 
     const company = await Company.findByPk(decodedId, {
         include: [{ model: Category, through: { attributes: [] } }]
@@ -65,7 +65,7 @@ exports.create = async (req, res) => {
 
     if (categoryIds && categoryIds.length > 0) {
         const decodedCategoryIds = decodeIds(categoryIds, ENTITY_TYPES.CATEGORY);
-        if (!decodedCategoryIds) return res.status(404).json({ error: 'ID not found' });
+        if (!decodedCategoryIds) return res.status(404).json({ error: 'Company not found' });
 
         await company.setCategories(decodedCategoryIds);
     }
@@ -77,7 +77,7 @@ exports.create = async (req, res) => {
 
 exports.patch = async (req, res) => {
     const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
-    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
+    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
 
     const company = await Company.findByPk(decodedId);
 
@@ -90,7 +90,7 @@ exports.patch = async (req, res) => {
 
     if (categoryIds !== undefined) {
         const decodedCategoryIds = decodeIds(categoryIds, ENTITY_TYPES.CATEGORY);
-        if (!decodedCategoryIds) return res.status(404).json({ error: 'ID not found' });
+        if (!decodedCategoryIds) return res.status(404).json({ error: 'Company not found' });
 
         await company.setCategories(decodedCategoryIds);
     }
@@ -102,7 +102,7 @@ exports.patch = async (req, res) => {
 
 exports.update = async (req, res) => {
     const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
-    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
+    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
 
     const company = await Company.findByPk(decodedId);
 
@@ -115,7 +115,7 @@ exports.update = async (req, res) => {
 
     if (categoryIds !== undefined) {
         const decodedCategoryIds = decodeIds(categoryIds, ENTITY_TYPES.CATEGORY);
-        if (!decodedCategoryIds) return res.status(404).json({ error: 'ID not found' });
+        if (!decodedCategoryIds) return res.status(404).json({ error: 'Company not found' });
 
         await company.setCategories(decodedCategoryIds);
     } else {
@@ -129,7 +129,7 @@ exports.update = async (req, res) => {
 
 exports.remove = async (req, res) => {
     const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
-    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
+    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
 
     const company = await Company.findByPk(decodedId);
 

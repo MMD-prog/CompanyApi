@@ -14,7 +14,7 @@ exports.create = async (req, res) => {
 
 exports.patch = async (req, res) => {
     const id = decodeId(req.params.id, ENTITY_TYPES.CATEGORY);
-    if (!id) return res.status(404).json({ error: 'ID not found' });
+    if (!id) return res.status(404).json({ error: 'Category not found' });
 
     const category = await Category.findByPk(id);
 
@@ -28,7 +28,7 @@ exports.patch = async (req, res) => {
 
 exports.update = async (req, res) => {
     const id = decodeId(req.params.id, ENTITY_TYPES.CATEGORY);
-    if (!id) return res.status(404).json({ error: 'ID not found' });
+    if (!id) return res.status(404).json({ error: 'Category not found' });
 
     const category = await Category.findByPk(id);
 
@@ -44,7 +44,7 @@ exports.update = async (req, res) => {
 
 exports.remove = async (req, res) => {
     const id = decodeId(req.params.id, ENTITY_TYPES.CATEGORY);
-    if (!id) return res.status(404).json({ error: 'ID not found' });
+    if (!id) return res.status(404).json({ error: 'Category not found' });
 
     const category = await Category.findByPk(id);
 

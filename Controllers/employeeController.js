@@ -33,7 +33,7 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
     const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
-    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
+    if (!decodedId) return res.status(404).json({ error: 'Employee not found' });
 
     const employee = await Employee.findByPk(decodedId);
 
@@ -52,7 +52,7 @@ exports.create = async (req, res) => {
 
 exports.patch = async (req, res) => {
     const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
-    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
+    if (!decodedId) return res.status(404).json({ error: 'Employee not found' });
 
     const employee = await Employee.findByPk(decodedId);
 
@@ -68,7 +68,7 @@ exports.patch = async (req, res) => {
 
 exports.update = async (req, res) => {
     const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
-    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
+    if (!decodedId) return res.status(404).json({ error: 'Employee not found' });
 
     const employee = await Employee.findByPk(decodedId);
 
@@ -84,7 +84,7 @@ exports.update = async (req, res) => {
 
 exports.remove = async (req, res) => {
     const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
-    if (!decodedId) return res.status(404).json({ error: 'ID not found' });
+    if (!decodedId) return res.status(404).json({ error: 'Employee not found' });
 
     const employee = await Employee.findByPk(decodedId);
 

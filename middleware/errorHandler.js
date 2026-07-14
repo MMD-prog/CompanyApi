@@ -10,20 +10,20 @@ const errorHandler = (err, req, res, next) => {
 
     if (err.name === 'SequelizeValidationError') {
         return res.status(422).json({
-            error: 'Validation failed',
+            error: 'Validation failure',
             details: err.errors.map(e => e.message)
         });
     }
 
     if (err.name === 'SequelizeUniqueConstraintError') {
         return res.status(409).json({
-            error: 'Data conflict',
+            error: 'Data already exists',
             message: context.uniqueMessage || 'A database conflict occurred.'
         });
     }
 
     return res.status(400).json({
-        error: 'Request Failed',
+        error: 'Bad Syntax',
         message: context.fallbackMessage || 'An unexpected error occurred.'
     });
 };

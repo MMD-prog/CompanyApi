@@ -2,46 +2,50 @@ const { Op, Company, Category } = require('../lib');
 const { formatCompany, FormatCompanies } = require('../DTOs/company.dto');
 const { decodeId, decodeIds, ENTITY_TYPES } = require('../Hashing/idHasher');
 
-exports.getAll = async (req, res) => {
-    const { search, category, page, limit } = req.query;
+exports.getAll = async (req, res, next) => {
+    try {
+        const { search, category, page, limit } = req.query;
 
-    const pageNum  = parseInt(page)  || 1;
-    const limitNum = parseInt(limit) || 10;
-    const offset   = (pageNum - 1) * limitNum;
+        const pageNum  = parseInt(page)  || 1;
+        const limitNum = parseInt(limit) || 10;
+        const offset   = (pageNum - 1) * limitNum;
 
-    const decodedCategoryId = category ? decodeId(category, ENTITY_TYPES.CATEGORY) : null;
-    if (category && !decodedCategoryId) {
-        return res.status(404).json({ error: 'Company not found' });
+        const decodedCategoryId = category ? decodeId(category, ENTITY_TYPES.CATEGORY) : null;
+        if (category && !decodedCategoryId) {
+            return res.status(404).json({ error: 'Company not found' });
+        }
+
+        const { count, rows: companies } = await Company.findAndCountAll({
+            where: search ? {
+                [Op.or]: [
+                    { name:    { [Op.like]: `%${search}%` } },
+                    { email:   { [Op.like]: `%${search}%` } },
+                    { address: { [Op.like]: `%${search}%` } }
+                ]
+            } : {},
+            include: [{
+                model: Category,
+                through: { attributes: [] },
+                ...(decodedCategoryId ? { where: { id: decodedCategoryId } } : {})
+            }],
+            limit:  limitNum,
+            offset,
+            distinct: true
+        });
+
+        if ((search || category) && companies.length === 0) {
+            return res.status(404).json({ error: 'No companies found matching your search' });
+        }
+
+        res.status(200).json({
+            total:      count,
+            page:       pageNum,
+            totalPages: Math.ceil(count / limitNum),
+            data:       FormatCompanies(companies)
+        });
+    } catch (error) {
+        next(error);
     }
-
-    const { count, rows: companies } = await Company.findAndCountAll({
-        where: search ? {
-            [Op.or]: [
-                { name:    { [Op.like]: `%${search}%` } },
-                { email:   { [Op.like]: `%${search}%` } },
-                { address: { [Op.like]: `%${search}%` } }
-            ]
-        } : {},
-        include: [{
-            model: Category,
-            through: { attributes: [] },
-            ...(decodedCategoryId ? { where: { id: decodedCategoryId } } : {})
-        }],
-        limit:  limitNum,
-        offset,
-        distinct: true
-    });
-
-    if ((search || category) && companies.length === 0) {
-        return res.status(404).json({ error: 'No companies found matching your search' });
-    }
-
-    res.status(200).json({
-        total:      count,
-        page:       pageNum,
-        totalPages: Math.ceil(count / limitNum),
-        data:       FormatCompanies(companies)
-    });
 };
 
 exports.getById = async (req, res) => {

@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json());
 
-sequelize.sync({ alter: true })
+sequelize.authenticate()
     .then(() => {
         console.log('Database connected.');
         registerRoutes(app);

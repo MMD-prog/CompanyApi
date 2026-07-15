@@ -44,6 +44,17 @@ exports.getAll = async (req, res, next) => {
             data:       FormatCompanies(companies)
         });
     } catch (error) {
+        const { page, limit } = req.query;
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+
+        if (
+            (page !== undefined && (isNaN(pageNum) || pageNum < 1)) ||
+            (limit !== undefined && (isNaN(limitNum) || limitNum < 1))
+        ) {
+            return res.status(400).json({ error: 'Bad syntax for pagination' });
+        }
+
         next(error);
     }
 };

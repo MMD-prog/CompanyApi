@@ -9,11 +9,13 @@ const Company = sequelize.define('Company', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     email: {
         type: DataTypes.STRING,
         validate: { isEmail: true },
+        unique: true
     },
     address: {
         type: DataTypes.STRING
@@ -23,21 +25,10 @@ const Company = sequelize.define('Company', {
     timestamps: true,
     paranoid: true,
     underscored: true,
-    updatedAt: true,
     defaultScope: {
-        attributes: { exclude: ['deletedAt', 'deleted_at'] },
+        attributes: { exclude: ['deleted_at'] },
         order: [['id', 'ASC']]
     },
-    indexes: [
-        {
-            unique: true,
-            fields: ['name']
-        },
-        {
-            unique: true,
-            fields: ['email']
-        }
-    ]
 });
 
 module.exports = Company;

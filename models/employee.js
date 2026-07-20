@@ -9,11 +9,13 @@ const Employee = sequelize.define('Employee', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     email: {
         type: DataTypes.STRING,
-        validate: { isEmail: true }
+        validate: { isEmail: true },
+        unique: true
     },
     company_id: {
         type: DataTypes.INTEGER,
@@ -24,17 +26,10 @@ const Employee = sequelize.define('Employee', {
     timestamps: true,
     paranoid: true,
     underscored: true,
-    updatedAt: true,
     defaultScope: {
-        attributes: { exclude: ['deletedAt', 'deleted_at'] },
+        attributes: { exclude: ['deleted_at'] },
         order: [['id', 'ASC']]
     },
-    indexes: [
-        {
-            unique: true,
-            fields: ['email','name']
-        }
-    ]
 });
 
 module.exports = Employee;

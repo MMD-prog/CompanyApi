@@ -12,7 +12,10 @@ npx sequelize-cli db:create
 5. to read the migration files
 npx sequelize-cli db:migrate
 
-6. to start the server
+6. to create mock data
+npx.cmd sequelize-cli db:seed:all
+
+7. to start the server
 node server.js
 
 Server will run on `http://localhost:3000`

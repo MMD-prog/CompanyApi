@@ -16,15 +16,15 @@ module.exports = {
 
     await queryInterface.bulkInsert('employees', [
       {
-        name: 'Alice Smith',
-        email: 'alice.smith@bankaletihad.com',
+        name: 'Mousa Estefan',
+        email: 'm.estefan@bankaletihad.com',
         company_id: baeCompanyId,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
-        name: 'Bob Jones',
-        email: 'bob.jones@oracle.com',
+        name: 'Amer Huzayen',
+        email: 'A.huzayen@oracle.com',
         company_id: oracleCompanyId,
         created_at: new Date(),
         updated_at: new Date()

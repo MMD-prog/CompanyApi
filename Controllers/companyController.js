@@ -4,7 +4,7 @@ const { decodeId, decodeIds, ENTITY_TYPES } = require('../Hashing/idHasher');
 
 exports.getAll = async (req, res, next) => {
     try {
-        const { search, category, page, limit } = req.query;
+        const { search, category, page, limit, deleted } = req.query;
 
         const pageNum  = parseInt(page)  || 1;
         const limitNum = parseInt(limit) || 10;
@@ -15,14 +15,22 @@ exports.getAll = async (req, res, next) => {
             return res.status(404).json({ error: 'Company not found' });
         }
 
+        let ParamsQueries = search ? {
+            [Op.or]: [
+                { name:    { [Op.like]: `%${search}%` } },
+                { email:   { [Op.like]: `%${search}%` } },
+                { address: { [Op.like]: `%${search}%` } }
+            ]
+        } : {};
+
+        if (deleted === 'only') {
+            ParamsQueries.deleted_at = { [Op.not]: null };
+        }
+
+        const isParanoid = !(deleted === 'true' || deleted === 'only');
+
         const { count, rows: companies } = await Company.findAndCountAll({
-            where: search ? {
-                [Op.or]: [
-                    { name:    { [Op.like]: `%${search}%` } },
-                    { email:   { [Op.like]: `%${search}%` } },
-                    { address: { [Op.like]: `%${search}%` } }
-                ]
-            } : {},
+            where: ParamsQueries,
             include: [{
                 model: Category,
                 through: { attributes: [] },
@@ -30,7 +38,8 @@ exports.getAll = async (req, res, next) => {
             }],
             limit:  limitNum,
             offset,
-            distinct: true
+            distinct: true,
+            paranoid: isParanoid
         });
 
         if ((search || category) && companies.length === 0) {
@@ -154,4 +163,22 @@ exports.remove = async (req, res) => {
 
     await company.destroy();
     res.status(204).send();
+};
+
+exports.restore = async (req, res) => {
+    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
+    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
+
+    const company = await Company.findByPk(decodedId, { paranoid: false });
+
+    if (!company) {
+        return res.status(404).json({ error: 'Company not found' });
+    }
+
+    if (company.deleted_at === null) {
+        return res.status(400).json({ error: 'Company is not deleted' });
+    }
+
+    await company.restore();
+    res.status(200).json(formatCompany(company));
 };

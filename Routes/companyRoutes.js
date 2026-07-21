@@ -291,4 +291,37 @@ router.delete('/:id', errorContext({
     fallbackMessage: 'An unexpected error occurred while deleting the company.'
 }), controller.remove);
 
+/**
+ * @swagger
+ * /companies/{id}/restore:
+ *   post:
+ *     tags:
+ *       - Companies
+ *     summary: Restore a soft-deleted company
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: hashed ID
+ *     responses:
+ *       '200':
+ *         description: Company restored successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 'Xk9PZ'
+ *               name: Restored Company
+ *               email: contact@company.com
+ *               address: KHBP
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ */
+router.post('/:id/restore', errorContext({
+    fallbackMessage: 'An unexpected error occurred while restoring the company.'
+}), controller.restore);
+
 module.exports = router;

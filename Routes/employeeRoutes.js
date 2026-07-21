@@ -263,11 +263,64 @@ router.patch('/:id', errorContext({
  *         description: Employee deleted successfully
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
+}), validateEmployee, controller.patch);
+
+/**
+ * @swagger
+ * /employees/{id}:
+ *   delete:
+ *     tags:
+ *       - Employees
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: hashed ID
+ *     responses:
+ *       '204':
+ *         description: Employee deleted successfully
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */
 router.delete('/:id', errorContext({
     fallbackMessage: 'An unexpected error occurred while deleting the employee.'
 }), controller.remove);
+
+/**
+ * @swagger
+ * /employees/{id}/restore:
+ *   post:
+ *     tags:
+ *       - Employees
+ *     summary: Restore a soft-deleted employee
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: hashed ID
+ *     responses:
+ *       '200':
+ *         description: Employee restored successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 'Xk9PZ'
+ *               name: Restored Employee
+ *               email: restored@test.com
+ *               company_id: 'aBcD12'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ */
+router.post('/:id/restore', errorContext({
+    fallbackMessage: 'An unexpected error occurred while restoring the employee.'
+}), controller.restore);
 
 module.exports = router;

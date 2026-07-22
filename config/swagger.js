@@ -26,7 +26,7 @@ const options = {
                 basicAuth: {
                     type: 'http',
                     scheme: 'basic',
-                    description: 'Basic Authentication header: Authorization: Basic <base64(username:password)>'
+                    description: 'Basic Authentication header'
                 }
             },
             responses: {
@@ -43,7 +43,7 @@ const options = {
                     content: {
                         'application/json': {
                             example: {
-                                error: 'Authentication required. Please provide Basic Auth credentials.'
+                                error: 'Authentication required.'
                             }
                         }
                     }
@@ -54,7 +54,7 @@ const options = {
                         'application/json': {
                             example: {
                                 error: 'Request Failed',
-                                message: 'Unable to process request due to bad input data structure.'
+                                message: 'Unable to process request due to bad input data.'
                             }
                         }
                     }

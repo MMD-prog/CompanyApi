@@ -3,7 +3,6 @@ const router = express.Router();
 const authController = require('../Controllers/authController');
 const basicAuth = require('../middleware/basicAuth');
 
-<<<<<<< HEAD
 /**
  * @swagger
  * /auth/register:
@@ -70,12 +69,6 @@ router.post('/register', authController.register);
  *       '401':
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-=======
-// Public route to register a new user
-router.post('/register', authController.register);
-
-// Protected route to check user profile (requires Basic Auth)
->>>>>>> a3c51a8f089c8d480bf880905fa698571b7b69d7
 router.get('/me', basicAuth, authController.me);
 
 module.exports = router;

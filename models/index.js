@@ -1,6 +1,7 @@
 const Company = require('./company');
 const Employee = require('./employee');
 const Category = require('./category');
+const User = require('./user');
 
 Company.hasMany(Employee, { foreignKey: 'company_id'});
 Employee.belongsTo(Company, { foreignKey: 'company_id' });
@@ -16,4 +17,5 @@ Category.belongsToMany(Company, {
     onDelete: 'CASCADE'
 });
 
-module.exports = { Company, Employee, Category };
+module.exports = { Company, Employee, Category, User };
+

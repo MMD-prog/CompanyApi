@@ -21,6 +21,20 @@ const options = {
             { name: 'Categories', description: 'Category endpoints' }
         ],
         components: {
+            securitySchemes: {
+                ApiKeyAuth: {
+                    type: 'apiKey',
+                    in: 'header',
+                    name: 'x-api-key',
+                    description: 'API key generated in the api_keys table'
+                },
+                BearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'API Key',
+                    description: 'API key sent as a Bearer token'
+                }
+            },
             responses: {
                 BadRequestError: {
                     description: 'Request failed fallback',

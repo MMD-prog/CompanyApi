@@ -23,6 +23,12 @@ const options = {
         ],
         components: {
             securitySchemes: {
+                ApiKeyAuth: {
+                    type: 'apiKey',
+                    in: 'header',
+                    name: 'x-api-key',
+                    description: 'API key generated in the api_keys table'
+                },
                 basicAuth: {
                     type: 'http',
                     scheme: 'basic',

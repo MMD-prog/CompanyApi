@@ -20,9 +20,9 @@ module.exports = {
     } 
     catch (err) {
       await TestingRollback.rollback();
-      console.log('Rollback triggered:', err.message);
-      throw err;
+      console.log('Rollback triggered successfully:', err.message);
     }
+
   },
 
   async down(queryInterface, Sequelize) {

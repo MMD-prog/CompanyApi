@@ -11,6 +11,8 @@ const router = express.Router();
  *   get:
  *     tags:
  *       - Companies
+ *     security:
+ *       - basicAuth: []
  *     parameters:
  *       - in: query
  *         name: search
@@ -54,6 +56,8 @@ const router = express.Router();
  *                   category:
  *                     - id: aZ9k2p
  *                       name: tech
+ *       '401':
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  *       '400':
@@ -69,6 +73,8 @@ router.get('/', errorContext({
  *   get:
  *     tags:
  *       - Companies
+ *     security:
+ *       - basicAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -86,6 +92,8 @@ router.get('/', errorContext({
  *               name: BAE
  *               email: contact@bae.com
  *               address: KHBP
+ *       '401':
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  *       '400':
@@ -101,6 +109,8 @@ router.get('/:id', errorContext({
  *   post:
  *     tags:
  *       - Companies
+ *     security:
+ *       - basicAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -139,6 +149,8 @@ router.get('/:id', errorContext({
  *               category:
  *                 - id: aZ9k2p
  *                   name: tech
+ *       '401':
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  *       '422':
@@ -157,6 +169,8 @@ router.post('/', errorContext({
  *   put:
  *     tags:
  *       - Companies
+ *     security:
+ *       - basicAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -194,6 +208,8 @@ router.post('/', errorContext({
  *               name: Updated Company
  *               email: updated@company.com
  *               address: New Address
+ *       '401':
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  *       '400':
@@ -214,6 +230,8 @@ router.put('/:id', errorContext({
  *   patch:
  *     tags:
  *       - Companies
+ *     security:
+ *       - basicAuth: []
  *     summary: Partially update a company
  *     parameters:
  *       - in: path
@@ -252,6 +270,8 @@ router.put('/:id', errorContext({
  *               name: Updated Company
  *               email: updated@company.com
  *               address: New Address
+ *       '401':
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  *       '400':
@@ -272,6 +292,8 @@ router.patch('/:id', errorContext({
  *   delete:
  *     tags:
  *       - Companies
+ *     security:
+ *       - basicAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -282,6 +304,8 @@ router.patch('/:id', errorContext({
  *     responses:
  *       '204':
  *         description: Company deleted successfully
+ *       '401':
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  *       '400':
@@ -297,6 +321,8 @@ router.delete('/:id', errorContext({
  *   post:
  *     tags:
  *       - Companies
+ *     security:
+ *       - basicAuth: []
  *     summary: Restore a soft-deleted company
  *     parameters:
  *       - in: path
@@ -315,6 +341,8 @@ router.delete('/:id', errorContext({
  *               name: Restored Company
  *               email: contact@company.com
  *               address: KHBP
+ *       '401':
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  *       '404':

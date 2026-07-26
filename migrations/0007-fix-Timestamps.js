@@ -2,8 +2,10 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.sequelize.query('ALTER TABLE employees RENAME COLUMN createdAt TO created_at;');
-    await queryInterface.sequelize.query('ALTER TABLE employees RENAME COLUMN updatedAt TO updated_at;');
+    try {
+        await queryInterface.sequelize.query('ALTER TABLE employees RENAME COLUMN createdAt TO created_at;');
+        await queryInterface.sequelize.query('ALTER TABLE employees RENAME COLUMN updatedAt TO updated_at;');
+    } catch(e) {}
     
     try {
         await queryInterface.sequelize.query('ALTER TABLE company_categories RENAME COLUMN createdAt TO created_at;');

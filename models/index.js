@@ -17,3 +17,4 @@ Category.belongsToMany(Company, {
 });
 
 module.exports = { Company, Employee, Category };
+

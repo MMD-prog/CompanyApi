@@ -59,7 +59,9 @@ exports.create = async (req, res) => {
 
     try {
         const payload = { ...req.body };
-        const employee = await Employee.create(payload, { transaction: CreateRollback });
+        const employee = await Employee.create(payload, { 
+            transaction: CreateRollback 
+        });
 
         await CreateRollback.commit();
 

@@ -16,6 +16,7 @@ const options = {
             }
         ],
         tags: [
+            { name: 'Auth',       description: 'Authentication endpoints' },
             { name: 'Companies',  description: 'Company endpoints' },
             { name: 'Employees',  description: 'Employee endpoints' },
             { name: 'Categories', description: 'Category endpoints' }
@@ -28,21 +29,38 @@ const options = {
                     name: 'x-api-key',
                     description: 'API key generated in the api_keys table'
                 },
-                BearerAuth: {
+                basicAuth: {
                     type: 'http',
-                    scheme: 'bearer',
-                    bearerFormat: 'API Key',
-                    description: 'API key sent as a Bearer token'
+                    scheme: 'basic',
+                    description: 'Basic Authentication header'
                 }
             },
             responses: {
+                UnauthorizedError: {
+                    description: 'Authentication required or invalid credentials',
+                    headers: {
+                        'WWW-Authenticate': {
+                            schema: {
+                                type: 'string',
+                                example: 'Basic realm="Secure Area"'
+                            }
+                        }
+                    },
+                    content: {
+                        'application/json': {
+                            example: {
+                                error: 'Authentication required.'
+                            }
+                        }
+                    }
+                },
                 BadRequestError: {
                     description: 'Request failed fallback',
                     content: {
                         'application/json': {
                             example: {
                                 error: 'Request Failed',
-                                message: 'Unable to process request due to bad input data structure.'
+                                message: 'Unable to process request due to bad input data.'
                             }
                         }
                     }

@@ -263,26 +263,6 @@ router.patch('/:id', errorContext({
  *         description: Employee deleted successfully
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
-}), validateEmployee, controller.patch);
-
-/**
- * @swagger
- * /employees/{id}:
- *   delete:
- *     tags:
- *       - Employees
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           description: hashed ID
- *     responses:
- *       '204':
- *         description: Employee deleted successfully
- *       '404':
- *         $ref: '#/components/responses/NotFoundError'
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */

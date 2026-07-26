@@ -9,5 +9,9 @@
   },
   "devDependencies": {
     "sequelize-cli": "^6.6.5"
+  },
+  "scripts": {
+    "key": "node create-key.js",
+    "create-api-key": "node create-key.js"
   }
 }

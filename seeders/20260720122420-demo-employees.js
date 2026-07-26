@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     const [companies] = await queryInterface.sequelize.query(
-      `SELECT id, name FROM companies WHERE name IN ('Bank Al Ethiad', 'Oracle');`
+      `SELECT id, name FROM companies WHERE name IN ('Bank Al Ethiad', 'Oracle');` // try model
     );
 
     if (companies.length < 2) {

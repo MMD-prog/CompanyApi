@@ -7,6 +7,7 @@ const ENTITY_TYPES = {
     COMPANY: 1,
     EMPLOYEE: 2,
     CATEGORY: 3,
+    USER: 4,
 };
 
 const encodeId = (id, entityType) => {

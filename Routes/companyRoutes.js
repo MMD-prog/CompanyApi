@@ -12,7 +12,7 @@ const router = express.Router();
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: search
@@ -74,7 +74,7 @@ router.get('/', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -110,7 +110,7 @@ router.get('/:id', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -170,7 +170,7 @@ router.post('/', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -231,7 +231,7 @@ router.put('/:id', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     summary: Partially update a company
  *     parameters:
  *       - in: path
@@ -293,7 +293,7 @@ router.patch('/:id', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -322,7 +322,7 @@ router.delete('/:id', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     summary: Restore a soft-deleted company
  *     parameters:
  *       - in: path

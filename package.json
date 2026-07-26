@@ -4,6 +4,10 @@
     "express": "^5.2.1",
     "mysql2": "^3.22.5",
     "sequelize": "^6.37.8",
+    "sqids": "^0.3.0",
     "swagger-jsdoc": "^6.3.0"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.5"
   }
 }

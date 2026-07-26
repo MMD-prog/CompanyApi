@@ -1,5 +1,7 @@
 const express = require('express');
 const controller = require('../Controllers/categoryController');
+const { errorContext } = require('../middleware/errorHandler');
+const { validateCategory } = require('../middleware/validators');
 
 const router = express.Router();
 
@@ -16,14 +18,16 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             example:
- *               - id: 1
+ *               - id: aZ9k2p
  *                 name: tech
- *               - id: 2
+ *               - id: xR3m1q
  *                 name: frontend
- *       '500':
- *         $ref: '#/components/responses/InternalServerError'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
  */
-router.get('/', controller.getAll);
+router.get('/', errorContext({
+    fallbackMessage: 'Unable to fetch categories due to an unexpected system error.'
+}), controller.getAll);
 
 /**
  * @swagger
@@ -50,12 +54,111 @@ router.get('/', controller.getAll);
  *         content:
  *           application/json:
  *             example:
- *               id: 1
+ *               id: aZ9k2p
  *               name: tech
- *       '500':
- *         $ref: '#/components/responses/InternalServerError'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
+ *       '422':
+ *         $ref: '#/components/responses/ValidationError'
+ *       '409':
+ *         $ref: '#/components/responses/ConflictError'
  */
-router.post('/', controller.create);
+router.post('/', errorContext({
+    fallbackMessage: 'An unexpected error occurred while creating the category.',
+    uniqueMessage: 'A category with this name already exists.'
+}), validateCategory, controller.create);
+
+/**
+ * @swagger
+ * /categories/{id}:
+ *   put:
+ *     tags:
+ *       - Categories
+ *     summary: Fully update a category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: aZ9k2p
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Updated Category
+ *     responses:
+ *       '200':
+ *         description: Category updated successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: aZ9k2p
+ *               name: Updated Category
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
+ *       '422':
+ *         $ref: '#/components/responses/ValidationError'
+ *       '409':
+ *         $ref: '#/components/responses/ConflictError'
+ */
+router.put('/:id', errorContext({
+    fallbackMessage: 'An unexpected error occurred while updating the category.',
+    uniqueMessage: 'A category with this name already exists.'
+}), validateCategory, controller.update);
+
+/**
+ * @swagger
+ * /categories/{id}:
+ *   patch:
+ *     tags:
+ *       - Categories
+ *     summary: Partially update a category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: aZ9k2p
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Updated Category
+ *     responses:
+ *       '200':
+ *         description: Category patched successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: aZ9k2p
+ *               name: Updated Category
+ *       '404':
+ *         $ref: '#/components/responses/NotFoundError'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
+ *       '422':
+ *         $ref: '#/components/responses/ValidationError'
+ *       '409':
+ *         $ref: '#/components/responses/ConflictError'
+ */
+router.patch('/:id', errorContext({
+    fallbackMessage: 'An unexpected error occurred while updating the category.',
+    uniqueMessage: 'A category with this name already exists.'
+}), validateCategory, controller.patch);
 
 /**
  * @swagger
@@ -64,21 +167,24 @@ router.post('/', controller.create);
  *     tags:
  *       - Categories
  *     summary: Delete a category
- *     description: Deletes a category and removes it from all associated companies. Companies themselves are not affected.
+ *     description: Deletes a category and removes it from all associated companies.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
+ *           example: aZ9k2p
  *     responses:
  *       '204':
  *         description: Category deleted successfully
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
- *       '500':
- *         $ref: '#/components/responses/InternalServerError'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequestError'
  */
-router.delete('/:id', controller.remove);
+router.delete('/:id', errorContext({
+    fallbackMessage: 'An unexpected error occurred while deleting the category.'
+}), controller.remove);
 
 module.exports = router;

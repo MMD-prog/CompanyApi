@@ -1,21 +1,40 @@
-Status codes read done (notes)
+1. Clone using bash
+git clone https://github.com/mestefan-cmd/CompanyApi.git
 
-*hash id's uuid done (using the universally unique identifier from sequelize) done
+2. create .env file and fill in your credentials
 
-distinct read done
+PORT=
+APP_URL=
 
-category params for search done 
+DB_HOST=
+DB_NAME=
+DB_USER=
+DB_PASS=
 
-*to not reselect company twice done
+3. for installing dependencies and packages
+npm install
 
-*deleted at hide done 
+4. to create a new db
+Mac/Linux: npx sequelize-cli db:create
+Windows: npx.cmd sequelize-cli db:create
 
-updated at done
+5. to run the migration files
+Mac/Linux: npx sequelize-cli db:migrate
+Windows: npx.cmd sequelize-cli db:migrate
 
-how to change the response data
+6. to create mock data
+Mac/Linux: npx sequelize-cli db:seed:all
+Windows: npx.cmd sequelize-cli db:seed:all
 
-setcategories read done
+7. to generate a new migration file
+Mac/Linux: npx sequelize-cli migration:generate --name your-migration-name
+Windows: npx.cmd sequelize-cli migration:generate --name your-migration-name
 
-authentication read done and removed
+8. to generate a new seeder file
+Mac/Linux: npx sequelize-cli seed:generate --name your-seeder-name
+Windows: npx.cmd sequelize-cli seed:generate --name your-seeder-name
 
-remove 500 status code and find ways to handle them
+9. to start the server
+node server.js
+
+Server will run on http://localhost:3000

@@ -2,13 +2,20 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
 const Employee = sequelize.define('Employee', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     email: {
         type: DataTypes.STRING,
-        validate: { isEmail: true }
+        validate: { isEmail: true },
+        unique: true
     },
     company_id: {
         type: DataTypes.INTEGER,
@@ -19,7 +26,10 @@ const Employee = sequelize.define('Employee', {
     timestamps: true,
     paranoid: true,
     underscored: true,
-    updatedAt: false
+    defaultScope: {
+        attributes: { exclude: ['deleted_at'] },
+        order: [['id', 'ASC']]
+    },
 });
 
 module.exports = Employee;

@@ -2,7 +2,7 @@ const Company = require('./company');
 const Employee = require('./employee');
 const Category = require('./category');
 
-Company.hasMany(Employee, { foreignKey: 'company_id', onDelete: 'CASCADE' });
+Company.hasMany(Employee, { foreignKey: 'company_id'});
 Employee.belongsTo(Company, { foreignKey: 'company_id' });
 
 Company.belongsToMany(Category, {

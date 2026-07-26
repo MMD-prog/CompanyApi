@@ -2,6 +2,11 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
 const Category = sequelize.define('Category', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -9,7 +14,10 @@ const Category = sequelize.define('Category', {
     }
 }, {
     tableName: 'categories',
-    timestamps: false
+    timestamps: false,
+    defaultScope: {
+        order: [['id', 'ASC']]
+    }
 });
 
 module.exports = Category;

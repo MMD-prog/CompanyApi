@@ -1,7 +1,7 @@
 const express = require('express');
 const controller = require('../Controllers/companyController');
 const { errorContext } = require('../middleware/errorHandler');
-const { validateCompany } = require('../middleware/validators');
+const { resolveId, ENTITY_TYPES } = require('../middleware/resolveId');
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ const router = express.Router();
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: search
@@ -74,7 +74,7 @@ router.get('/', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -99,7 +99,7 @@ router.get('/', errorContext({
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */
-router.get('/:id', errorContext({
+router.get('/:id', resolveId(ENTITY_TYPES.COMPANY), errorContext({
     fallbackMessage: 'An unexpected error occurred while fetching the company.'
 }), controller.getById);
 
@@ -110,7 +110,7 @@ router.get('/:id', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -170,7 +170,7 @@ router.post('/', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -219,7 +219,7 @@ router.post('/', errorContext({
  *       '409':
  *         $ref: '#/components/responses/ConflictError'
  */
-router.put('/:id', errorContext({
+router.put('/:id', resolveId(ENTITY_TYPES.COMPANY), errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the company.',
     uniqueMessage: 'This update conflicts with an existing unique record.'
 }), validateCompany, controller.update);
@@ -231,7 +231,7 @@ router.put('/:id', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     summary: Partially update a company
  *     parameters:
  *       - in: path
@@ -281,7 +281,7 @@ router.put('/:id', errorContext({
  *       '409':
  *         $ref: '#/components/responses/ConflictError'
  */
-router.patch('/:id', errorContext({
+router.patch('/:id', resolveId(ENTITY_TYPES.COMPANY), errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the company.',
     uniqueMessage: 'This update conflicts with an existing unique record.'
 }), validateCompany, controller.patch);
@@ -293,7 +293,7 @@ router.patch('/:id', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -311,7 +311,7 @@ router.patch('/:id', errorContext({
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */
-router.delete('/:id', errorContext({
+router.delete('/:id', resolveId(ENTITY_TYPES.COMPANY), errorContext({
     fallbackMessage: 'An unexpected error occurred while deleting the company.'
 }), controller.remove);
 
@@ -322,7 +322,7 @@ router.delete('/:id', errorContext({
  *     tags:
  *       - Companies
  *     security:
- *       - basicAuth: []
+ *       - bearerAuth: []
  *     summary: Restore a soft-deleted company
  *     parameters:
  *       - in: path
@@ -348,7 +348,7 @@ router.delete('/:id', errorContext({
  *       '404':
  *         $ref: '#/components/responses/NotFoundError'
  */
-router.post('/:id/restore', errorContext({
+router.post('/:id/restore', resolveId(ENTITY_TYPES.COMPANY), errorContext({
     fallbackMessage: 'An unexpected error occurred while restoring the company.'
 }), controller.restore);
 

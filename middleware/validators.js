@@ -75,3 +75,17 @@ exports.validateCategory = (req, res, next) => {
 
     next();
 };
+
+exports.validateAuth = (req, res, next) => {
+    const { username, password } = req.body;
+
+    if (!username) return res.status(422).json({ error: 'Username is required' });
+    if (typeof username !== 'string') return res.status(422).json({ error: 'Username must be a string' });
+    if (username.trim().length === 0) return res.status(422).json({ error: 'Username cannot be empty' });
+
+    if (!password) return res.status(422).json({ error: 'Password is required' });
+    if (typeof password !== 'string') return res.status(422).json({ error: 'Password must be a string' });
+    if (password.trim().length === 0) return res.status(422).json({ error: 'Password cannot be empty' });
+
+    next();
+};

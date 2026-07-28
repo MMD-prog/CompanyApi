@@ -2,6 +2,7 @@ const express = require('express');
 const controller = require('../Controllers/categoryController');
 const { errorContext } = require('../middleware/errorHandler');
 const { validateCategory } = require('../middleware/validators');
+const { resolveId, ENTITY_TYPES } = require('../middleware/resolveId');
 
 const router = express.Router();
 
@@ -109,7 +110,7 @@ router.post('/', errorContext({
  *       '409':
  *         $ref: '#/components/responses/ConflictError'
  */
-router.put('/:id', errorContext({
+router.put('/:id', resolveId(ENTITY_TYPES.CATEGORY), errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the category.',
     uniqueMessage: 'A category with this name already exists.'
 }), validateCategory, controller.update);
@@ -155,7 +156,7 @@ router.put('/:id', errorContext({
  *       '409':
  *         $ref: '#/components/responses/ConflictError'
  */
-router.patch('/:id', errorContext({
+router.patch('/:id', resolveId(ENTITY_TYPES.CATEGORY), errorContext({
     fallbackMessage: 'An unexpected error occurred while updating the category.',
     uniqueMessage: 'A category with this name already exists.'
 }), validateCategory, controller.patch);
@@ -183,7 +184,7 @@ router.patch('/:id', errorContext({
  *       '400':
  *         $ref: '#/components/responses/BadRequestError'
  */
-router.delete('/:id', errorContext({
+router.delete('/:id', resolveId(ENTITY_TYPES.CATEGORY), errorContext({
     fallbackMessage: 'An unexpected error occurred while deleting the category.'
 }), controller.remove);
 

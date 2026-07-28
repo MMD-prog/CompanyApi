@@ -1,6 +1,5 @@
 const { Op, Employee } = require('../lib');
 const { formatEmployee, FormatEmployees } = require('../DTOs/employee.dto');
-const { decodeId, ENTITY_TYPES } = require('../Hashing/idHasher');
 const sequelize = require('../db');
 
 exports.getAll = async (req, res) => {
@@ -42,10 +41,7 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
-    if (!decodedId) return res.status(404).json({ error: 'Employee not found' });
-
-    const employee = await Employee.findByPk(decodedId);
+    const employee = await Employee.findByPk(req.decodedId);
 
     if (!employee) {
         return res.status(404).json({ error: 'Employee not found' });
@@ -73,10 +69,7 @@ exports.create = async (req, res) => {
 };
 
 exports.patch = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
-    if (!decodedId) return res.status(404).json({ error: 'Employee not found' });
-
-    const employee = await Employee.findByPk(decodedId);
+    const employee = await Employee.findByPk(req.decodedId);
 
     if (!employee) {
         return res.status(404).json({ error: 'Employee not found' });
@@ -89,10 +82,7 @@ exports.patch = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
-    if (!decodedId) return res.status(404).json({ error: 'Employee not found' });
-
-    const employee = await Employee.findByPk(decodedId);
+    const employee = await Employee.findByPk(req.decodedId);
 
     if (!employee) {
         return res.status(404).json({ error: 'Employee not found' });
@@ -105,10 +95,7 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
-    if (!decodedId) return res.status(404).json({ error: 'Employee not found' });
-
-    const employee = await Employee.findByPk(decodedId);
+    const employee = await Employee.findByPk(req.decodedId);
 
     if (!employee) {
         return res.status(404).json({ error: 'Employee not found' });
@@ -119,10 +106,7 @@ exports.remove = async (req, res) => {
 };
 
 exports.restore = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.EMPLOYEE);
-    if (!decodedId) return res.status(404).json({ error: 'Employee not found' });
-
-    const employee = await Employee.findByPk(decodedId, { paranoid: false });
+    const employee = await Employee.findByPk(req.decodedId, { paranoid: false });
 
     if (!employee) {
         return res.status(404).json({ error: 'Employee not found' });

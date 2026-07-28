@@ -69,10 +69,7 @@ exports.getAll = async (req, res, next) => {
 };
 
 exports.getById = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
-    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
-
-    const company = await Company.findByPk(decodedId, {
+    const company = await Company.findByPk(req.decodedId, {
         include: [{ model: Category, through: { attributes: [] } }]
     });
 
@@ -100,10 +97,7 @@ exports.create = async (req, res) => {
 };
 
 exports.patch = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
-    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
-
-    const company = await Company.findByPk(decodedId);
+    const company = await Company.findByPk(req.decodedId);
 
     if (!company) {
         return res.status(404).json({ error: 'Company not found' });
@@ -125,10 +119,7 @@ exports.patch = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
-    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
-
-    const company = await Company.findByPk(decodedId);
+    const company = await Company.findByPk(req.decodedId);
 
     if (!company) {
         return res.status(404).json({ error: 'Company not found' });
@@ -152,10 +143,7 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
-    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
-
-    const company = await Company.findByPk(decodedId);
+    const company = await Company.findByPk(req.decodedId);
 
     if (!company) {
         return res.status(404).json({ error: 'Company not found' });
@@ -166,10 +154,7 @@ exports.remove = async (req, res) => {
 };
 
 exports.restore = async (req, res) => {
-    const decodedId = decodeId(req.params.id, ENTITY_TYPES.COMPANY);
-    if (!decodedId) return res.status(404).json({ error: 'Company not found' });
-
-    const company = await Company.findByPk(decodedId, { paranoid: false });
+    const company = await Company.findByPk(req.decodedId, { paranoid: false });
 
     if (!company) {
         return res.status(404).json({ error: 'Company not found' });

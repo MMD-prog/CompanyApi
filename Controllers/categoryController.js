@@ -1,6 +1,5 @@
 const { Category } = require('../lib');
 const { formatCategory, FormatCategories } = require('../DTOs/category.dto');
-const { decodeId, ENTITY_TYPES } = require('../Hashing/idHasher');
 
 exports.getAll = async (req, res) => {
     const categories = await Category.findAll();
@@ -13,10 +12,7 @@ exports.create = async (req, res) => {
 };
 
 exports.patch = async (req, res) => {
-    const id = decodeId(req.params.id, ENTITY_TYPES.CATEGORY);
-    if (!id) return res.status(404).json({ error: 'Category not found' });
-
-    const category = await Category.findByPk(id);
+    const category = await Category.findByPk(req.decodedId);
 
     if (!category) {
         return res.status(404).json({ error: 'Category not found' });
@@ -27,10 +23,7 @@ exports.patch = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const id = decodeId(req.params.id, ENTITY_TYPES.CATEGORY);
-    if (!id) return res.status(404).json({ error: 'Category not found' });
-
-    const category = await Category.findByPk(id);
+    const category = await Category.findByPk(req.decodedId);
 
     if (!category) {
         return res.status(404).json({ error: 'Category not found' });
@@ -43,10 +36,7 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-    const id = decodeId(req.params.id, ENTITY_TYPES.CATEGORY);
-    if (!id) return res.status(404).json({ error: 'Category not found' });
-
-    const category = await Category.findByPk(id);
+    const category = await Category.findByPk(req.decodedId);
 
     if (!category) {
         return res.status(404).json({ error: 'Category not found' });

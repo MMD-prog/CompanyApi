@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { formatUser } = require('../DTOs/user.dto');
+const { addTokenToBlacklist } = require('../lib/cachedTokens');
 
 exports.register = async (req, res, next) => {
     const { username, password } = req.body;
@@ -32,9 +33,9 @@ exports.login = async (req, res, next) => {
     }
 
     const formattedUser = formatUser(user);
-    
+
     const token = jwt.sign(
-        { id: formattedUser.id, username: user.username },
+        { id: formattedUser.id, username: user.username, jti: `${Date.now()}_${Math.random().toString(36).substring(2, 9)}` },
         process.env.JWT_SECRET || 'supersecretjwtkey123!',
         { expiresIn: '24h' }
     );
@@ -47,5 +48,13 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.decode(token);
+        const ttl = decoded?.exp ? decoded.exp - Math.floor(Date.now() / 1000) : 86400;
+        await addTokenToBlacklist(token, ttl > 0 ? ttl : 86400);
+    }
+
     res.status(200).json({ message: 'Logged out successfully.' });
 };

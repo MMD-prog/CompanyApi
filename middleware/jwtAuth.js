@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const { isTokenBlacklisted } = require('../lib/cachedTokens');
 
-const jwtAuth = (req, res, next) => {
+const jwtAuth = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -11,6 +12,12 @@ const jwtAuth = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecretjwtkey123!');
+
+        const isRevoked = await isTokenBlacklisted(token);
+        if (isRevoked) {
+            return res.status(401).json({ error: 'Unauthorized. Token has been revoked.' });
+        }
+
         req.user = decoded;
         next();
     } catch (err) {

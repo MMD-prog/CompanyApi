@@ -2,11 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { formatUser } = require('../DTOs/user.dto');
-<<<<<<< HEAD
 const { addToken } = require('../lib/logoutToken');
-=======
-const { addToken } = require('../lib/blacklistedTokens');
->>>>>>> d6dc4be95747c05011386b99e19da3459c148acb
 
 exports.register = async (req, res, next) => {
     const { username, password } = req.body;

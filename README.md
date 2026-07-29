@@ -1,6 +1,6 @@
 # Company API
 
-A RESTful Express.js API built with Node.js, MySQL, and Sequelize. Features multi-strategy authentication (API Keys and Basic Auth), hashed entity IDs (Sqids), request validation, soft-delete capabilities, and OpenAPI 3.0 documentation.
+A RESTful Express.js API built with Node.js, MySQL, and Sequelize. Features multi-strategy authentication (Basic Auth and API Keys), hashed entity IDs (Sqids), request validation, soft-delete capabilities, and OpenAPI 3.0 documentation.
 
 ---
 
@@ -9,13 +9,13 @@ A RESTful Express.js API built with Node.js, MySQL, and Sequelize. Features mult
 The `master` branch represents the base production version of the API, containing core features:
 
 - **Authentication Strategies**:
-  - **API Key Authentication** (for `/employees`) using header `api-key`.
-  - **Basic Authentication** (for `/categories`) using header `Authorization: Basic <base64>`.
+  - **Basic Authentication** (for `/companies` and `/categories`) using header `Authorization: Basic <base64(user:pass)>`.
+  - **API Key Authentication** (for `/employees`) using header `api-key: <api_key>`.
 - **Obfuscated Entity IDs**:
   - Hashed public IDs using Sqids to prevent sequential ID enumeration.
 - **Database & Soft Delete**:
-  - Full CRUD operations with MySQL & Sequelize ORM.
-  - Soft-delete and restoration support for resources.
+  - Full CRUD operations for Companies, Employees, and Categories with MySQL & Sequelize ORM.
+  - Soft-delete and restoration support for companies and employees.
 - **Interactive Documentation**:
   - Swagger UI / OpenAPI 3.0 documentation generated automatically.
 
@@ -27,12 +27,12 @@ Below is a breakdown of all active branches in this repository and what features
 
 ### 1. `master` (Default Branch)
 - Base stable release.
-- Includes API Key authentication for employees, Basic Auth for categories, Sqids ID hashing, and soft-delete capabilities.
+- Includes Basic Auth for `/companies` and `/categories`, API Key authentication for `/employees`, Sqids ID hashing, and soft-delete capabilities.
 
 ### 2. `feature/JWT`
 - Adds **User Authentication & JWT Support**.
 - Introduces `/auth/register`, `/auth/login`, and `/auth/logout` endpoints.
-- Protects `/companies` endpoints with JWT Bearer tokens (`Authorization: Bearer <jwt_token>`).
+- Upgrades `/companies` endpoints to use JWT Bearer tokens (`Authorization: Bearer <jwt_token>`) instead of Basic Auth.
 - Includes a centralized `resolveId` middleware to simplify controller ID decoding.
 
 ### 3. `feature/JWT-Crono-Job`
@@ -112,12 +112,28 @@ The server will run on `http://localhost:3000`.
 
 | Route Prefix | Strategy | Required Header |
 | :--- | :--- | :--- |
+| `/companies` | Basic Auth | `Authorization: Basic <base64(user:pass)>` |
 | `/employees` | API Key | `api-key: <api_key>` |
 | `/categories` | Basic Auth | `Authorization: Basic <base64(user:pass)>` |
 
 ---
 
 ## API Endpoints Reference (`master`)
+
+### Companies (`/companies`)
+*All endpoints require `Authorization: Basic <base64(user:pass)>`.*
+
+| Method | Endpoint | Description | Query Parameters |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/companies` | List companies (paginated) | `search`, `category`, `page`, `limit` |
+| `GET` | `/companies/:id` | Get company by hashed ID | None |
+| `POST` | `/companies` | Create a new company | None |
+| `PUT` | `/companies/:id` | Fully update a company | None |
+| `PATCH` | `/companies/:id` | Partially update a company | None |
+| `DELETE` | `/companies/:id` | Soft-delete a company | None |
+| `POST` | `/companies/:id/restore` | Restore a soft-deleted company | None |
+
+---
 
 ### Employees (`/employees`)
 *All endpoints require `api-key: <api_key>`.*

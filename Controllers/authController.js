@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { formatUser } = require('../DTOs/user.dto');
+const { addToken } = require('../lib/logoutToken');
 
 exports.register = async (req, res, next) => {
     const { username, password } = req.body;
@@ -47,5 +48,14 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.decode(token);
+        const exp = decoded?.exp ? decoded.exp * 1000 : Date.now() + 24 * 60 * 60 * 1000;
+        addToken(token, exp);
+    }
+
     res.status(200).json({ message: 'Logged out successfully.' });
 };

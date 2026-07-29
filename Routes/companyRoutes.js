@@ -1,6 +1,7 @@
 const express = require('express');
 const controller = require('../Controllers/companyController');
 const { errorContext } = require('../middleware/errorHandler');
+const { validateCompany } = require('../middleware/validators');
 const { resolveId, ENTITY_TYPES } = require('../middleware/resolveId');
 
 const router = express.Router();

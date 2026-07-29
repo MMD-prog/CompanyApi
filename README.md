@@ -1,6 +1,6 @@
 # Company API
 
-An entry-level Express.js REST API with MySQL/Sequelize, featuring multi-strategy authentication (JWT Bearer, API Keys, and Basic Auth), hashed IDs, validation, and soft-delete capabilities.
+An entry-level Express.js REST API with MySQL/Sequelize, featuring multi-strategy authentication (JWT Bearer, API Keys, and Basic Auth), hashed IDs, validation, soft-delete capabilities, and a background cron job for token cleanup.
 
 ---
 
@@ -64,7 +64,7 @@ The server will run on `http://localhost:3000` (or your configured `PORT`).
 
 ---
 
-## Authentication Strategies
+## Authentication Strategies & Token Management
 
 | Route Prefix | Auth Type | Required Header |
 | :--- | :--- | :--- |
@@ -72,6 +72,11 @@ The server will run on `http://localhost:3000` (or your configured `PORT`).
 | `/companies` | **JWT Token** | `Authorization: Bearer <your_jwt_token>` |
 | `/employees` | **API Key** | `api-key: <your_api_key>` |
 | `/categories` | **Basic Auth** | `Authorization: Basic <base64(user:pass)>` |
+
+### JWT Token Revocation & Cron Cleanup
+- **Logout Revocation**: When a user logs out (`POST /auth/logout`), their Bearer token is added to the in-memory `LogoutToken` store.
+- **Middleware Check**: `jwtAuth` middleware checks `LogoutToken` and rejects blacklisted tokens with a `401 Unauthorized` response.
+- **Scheduled Cron Job**: A background task powered by `node-cron` runs every 24 hours at 3:00 AM (`0 3 * * *`) to automatically purge expired tokens from `LogoutToken`.
 
 ---
 
@@ -82,7 +87,7 @@ The server will run on `http://localhost:3000` (or your configured `PORT`).
 | :--- | :--- | :--- | :--- |
 | `POST` | `/auth/register` | Register a new user account | No |
 | `POST` | `/auth/login` | Log in with credentials & receive JWT token | No |
-| `POST` | `/auth/logout` | Log out user session | No |
+| `POST` | `/auth/logout` | Log out user session & invalidate token | Yes (Bearer) |
 
 ---
 

@@ -1,9 +1,5 @@
 const jwt = require('jsonwebtoken');
-<<<<<<< HEAD
 const { isBlacklisted } = require('../lib/logoutToken');
-=======
-const { isBlacklisted } = require('../lib/blacklistedTokens');
->>>>>>> d6dc4be95747c05011386b99e19da3459c148acb
 
 const jwtAuth = (req, res, next) => {
     const authHeader = req.headers.authorization;

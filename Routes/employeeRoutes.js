@@ -1,6 +1,7 @@
 const express = require('express');
 const controller = require('../Controllers/employeeController');
 const { errorContext } = require('../middleware/errorHandler');
+const { validateEmployee } = require('../middleware/validators');
 const { resolveId, ENTITY_TYPES } = require('../middleware/resolveId');
 
 const router = express.Router();

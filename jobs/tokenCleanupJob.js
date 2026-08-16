@@ -1,14 +1,11 @@
 const cron = require('node-cron');
-const path = require('path');
 const winston = require('winston');
 require('winston-daily-rotate-file');
-const { removeExpiredTokens } = require('../lib/logoutToken');
+const { cleanupTokens } = require('../lib/logoutToken');
 
 const fileRotateTransport = new winston.transports.DailyRotateFile({
-    filename: path.join(__dirname, '..', 'logs', 'cronJobs-%DATE%.log'),
-    datePattern: 'YYYY-MM-DD',
-    maxFiles: '30d',
-    maxSize: '20m'
+    filename: 'logs/cron-%DATE%.log',
+    datePattern: 'YYYY-MM-DD'
 });
 
 const logger = winston.createLogger({
@@ -22,11 +19,13 @@ const logger = winston.createLogger({
     transports: [fileRotateTransport]
 });
 
-cron.schedule('* * * * *', function () {
+cron.schedule('*/5 * * * *', async () => {
     try {
-        removeExpiredTokens();
+        await cleanupTokens();
         logger.info('Successfully removed expired tokens via the cron job.');
-    } catch (error) {
-        logger.error('Unable to remove: ' + error.message);
+    } catch (err) {
+        logger.error(`Failed to remove expired tokens: ${err.message}`);
     }
 });
+
+module.exports = logger;

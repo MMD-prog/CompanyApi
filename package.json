@@ -8,6 +8,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.22.5",
     "node-cron": "^4.6.0",
+    "redis": "^4.7.0",
     "sequelize": "^6.37.8",
     "sqids": "^0.3.0",
     "swagger-jsdoc": "^6.3.0",

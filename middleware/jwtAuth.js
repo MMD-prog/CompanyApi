@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { isBlacklisted } = require('../lib/logoutToken');
 
-const jwtAuth = (req, res, next) => {
+const jwtAuth = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -10,7 +10,8 @@ const jwtAuth = (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    if (isBlacklisted(token)) {
+    const blacklisted = await isBlacklisted(token);
+    if (blacklisted) {
         return res.status(401).json({ error: 'Unauthorized. Token has been revoked.' });
     }
 

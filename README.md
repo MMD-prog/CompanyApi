@@ -2,18 +2,24 @@
 
 A RESTful Express.js API built with Node.js, MySQL, Redis, and Sequelize. Features multi-strategy authentication (JWT Bearer, API Keys, and Basic Auth), distributed Redis token revocation, connection pooling, performance B-Tree indexing, Redis rate-limiting, system health monitoring, and centralized daily-rotated error logging.
 
+> **Note on Branches:** `master` is the primary protected branch on GitHub. `main` is an exact copy of `master` maintained as an unprotected mirror for active updates and documentation.
+
 ---
 
 ## Branch Overview & System Architecture
 
 | Branch Name | Primary Feature / Architecture Focus | Key Modules |
 | :--- | :--- | :--- |
-| **`master`** | Core RESTful API baseline | Express, MySQL, Sequelize, Swagger |
+| **`master`** / **`main`** | Core RESTful API baseline *(Note: `main` is an exact mirror of `master`, unprotected)* | Express, MySQL, Sequelize, Swagger |
+| **`feature/JWT`** | JWT Bearer Authentication & Token Generation | `middleware/jwtAuth.js`, `Controllers/authController.js` |
+| **`feature/api-keys`** | API Key Header-Based Authentication (`/employees`) | `middleware/apiKeyAuth.js`, `models/apiKey.js` |
+| **`feature/basic-auth`** | HTTP Basic Authentication (`/categories`) | `middleware/basicAuth.js` |
+| **`publicapi`** | Public API integration & endpoints | `Controllers/weatherController.js`, `Routes/publicRoutes.js` |
+| **`CronJob+Redis+Winston`** | Redis Token Blacklist, Winston Logging & Scheduled Cron Cleanup | `config/redis.js`, `jobs/tokenCleanupJob.js`, `lib/logoutToken.js` |
 | **`Indexes+changes`** | DB B-Tree Indexing & Connection Pooling | `migrations/0011-add-performance-indexes.js`, `db.js` |
 | **`feature/rate-limiting-redis`** | Redis-Backed Rate Limiting Middleware | `middleware/rateLimiter.js`, `Routes/authRoutes.js` |
 | **`feature/health-check`** | System Health Check API (`GET /health`) | `Controllers/healthController.js`, `Routes/healthRoutes.js` |
 | **`feature/centralized-error-logging`** | App-Wide Centralized Winston Logger & Exceptions | `lib/logger.js`, `middleware/errorHandler.js`, `server.js` |
-| **`feature/JWT-Crono-Job-WinstonLog`** | Scheduled Cron Cleanup & Log Rotation | `jobs/tokenCleanupJob.js`, `lib/logoutToken.js` |
 
 ---
 

@@ -1,26 +1,48 @@
 # Company API
 
-A RESTful Express.js API built with Node.js, MySQL, and Sequelize. Features multi-strategy authentication (JWT Bearer, API Keys, and Basic Auth), in-memory token revocation with scheduled cleanup, hashed entity IDs (Sqids), request validation, and soft-delete capabilities.
+A RESTful Express.js API built with Node.js, MySQL, Redis, and Sequelize. Features multi-strategy authentication (JWT Bearer, API Keys, and Basic Auth), distributed Redis token revocation, connection pooling, performance B-Tree indexing, Redis rate-limiting, system health monitoring, and centralized daily-rotated error logging.
 
 ---
 
-## Features
+## Branch Overview & System Architecture
 
+| Branch Name | Primary Feature / Architecture Focus | Key Modules |
+| :--- | :--- | :--- |
+| **`main`** / **`master`** | Core RESTful API baseline | Express, MySQL, Sequelize, Swagger |
+| **`Indexes+changes`** | DB B-Tree Indexing & Connection Pooling | `migrations/0011-add-performance-indexes.js`, `db.js` |
+| **`feature/rate-limiting-redis`** | Redis-Backed Rate Limiting Middleware | `middleware/rateLimiter.js`, `Routes/authRoutes.js` |
+| **`feature/health-check`** | System Health Check API (`GET /health`) | `Controllers/healthController.js`, `Routes/healthRoutes.js` |
+| **`feature/centralized-error-logging`** | App-Wide Centralized Winston Logger & Exceptions | `lib/logger.js`, `middleware/errorHandler.js`, `server.js` |
+| **`feature/JWT-Crono-Job-WinstonLog`** | Scheduled Cron Cleanup & Log Rotation | `jobs/tokenCleanupJob.js`, `lib/logoutToken.js` |
+
+---
+
+## Key Features & Production Enhancements
+
+- **Distributed Redis Token Store**:
+  - Revoked JWT tokens on `POST /auth/logout` are stored in Redis (`bl:<token>`) with matching expiration TTLs across server instances.
+  - Seamless fallback to local in-memory store if Redis is disconnected.
+- **Database B-Tree Indexing & Connection Pooling**:
+  - High-performance B-Tree indexes on `employees(company_id)`, `companies(name)`, `employees(name)`, and composite index `company_categories(company_id, category_id)`.
+  - Configured Sequelize connection pool limits (`max: 10`, `min: 2`, `acquire: 30000`, `idle: 10000`) to prevent DB connection exhaustion under heavy load.
+- **Race-Condition-Free Redis Rate Limiting**:
+  - Middleware (`middleware/rateLimiter.js`) limits request rates per IP (`rl:<ip>:<prefix>`).
+  - Executes `EXPIRE` only when `count === 1` to guarantee TTL assignment and prevent permanent stuck rate limits.
+  - Attaches `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `Retry-After` headers, returning `429 Too Many Requests` on limit breaches.
+  - Includes graceful Winston logger error fallback if Redis drops out.
+- **System Health Monitoring (`GET /health`)**:
+  - Public endpoint returning SQL-formatted timestamp (`YYYY-MM-DD HH:mm:ss`), process uptime, memory usage (`rss` & `heapUsed` in MB), MySQL pool connection stats, and Redis connection state.
+  - Returns `200 OK` when fully operational, and `503 Service Unavailable` if database/redis fails.
+- **Centralized Winston Error Logging**:
+  - Daily rotated log files (`logs/app-errors-%DATE%.log` and `logs/combined-%DATE%.log`) via `winston-daily-rotate-file`.
+  - Global Express error middleware logging HTTP method, URL path, IP, status code, and stack trace while stripping sensitive body fields (`password`).
+  - Process-level protection for `uncaughtException` and `unhandledRejection` so background failures never crash the server silently.
 - **Multi-Strategy Authentication**:
-  - JWT Bearer Authentication (for `/companies`)
-  - API Key Authentication (for `/employees`)
-  - Basic Authentication (for `/categories`)
-  - Public Auth endpoints (`/auth/register`, `/auth/login`, `/auth/logout`)
-- **Token Revocation & Scheduled Cleanup**:
-  - In-memory token blacklisting on `/auth/logout` using the `LogoutToken` store.
-  - Background cron job (`node-cron`) runs daily at 3:00 AM to automatically purge expired tokens.
-- **Hashed Entity IDs**:
-  - Public-facing IDs are obfuscated using Sqids to prevent sequential ID harvesting.
-- **Data Integrity & Validation**:
-  - Request body validation middleware.
-  - Soft deletion and restoration support for companies and employees.
+  - JWT Bearer Authentication (`/companies`)
+  - API Key Authentication (`/employees`)
+  - Basic Authentication (`/categories`)
 - **Interactive Documentation**:
-  - OpenAPI 3.0 / Swagger UI specs automatically generated.
+  - OpenAPI 3.0 / Swagger UI specs automatically generated at `/api-docs`.
 
 ---
 
@@ -29,7 +51,8 @@ A RESTful Express.js API built with Node.js, MySQL, and Sequelize. Features mult
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Database**: MySQL with Sequelize ORM
-- **Scheduling**: node-cron
+- **In-Memory Store & Cache**: Redis
+- **Logging & Scheduling**: Winston, `winston-daily-rotate-file`, `node-cron`
 - **Authentication**: JSON Web Tokens (`jsonwebtoken`), `bcryptjs`, `basic-auth`
 - **Documentation**: Swagger UI (`swagger-jsdoc`)
 
@@ -47,6 +70,8 @@ DB_HOST=127.0.0.1
 DB_NAME=company_db
 DB_USER=root
 DB_PASS=your_password
+
+REDIS_URL=redis://127.0.0.1:6379
 
 JWT_SECRET=your_jwt_secret_key
 
@@ -83,31 +108,33 @@ The server will run on `http://localhost:3000`.
 
 ## Security & Authentication Overview
 
-| Route Prefix | Strategy | Required Header |
-| :--- | :--- | :--- |
-| `/auth` | None (Public) | None |
-| `/companies` | JWT Bearer | `Authorization: Bearer <jwt_token>` |
-| `/employees` | API Key | `api-key: <api_key>` |
-| `/categories` | Basic Auth | `Authorization: Basic <base64(user:pass)>` |
-
-### Token Revocation Flow
-
-1. User calls `POST /auth/logout` with their Bearer token.
-2. The token is stored in the in-memory `LogoutToken` blacklist along with its expiration timestamp.
-3. All subsequent requests using that token are rejected by `jwtAuth` middleware with `401 Unauthorized`.
-4. A background cron job runs daily at 3:00 AM (`0 3 * * *`) and removes any tokens whose expiration has passed, keeping the store clean.
+| Route Prefix | Strategy | Required Header | Rate Limited |
+| :--- | :--- | :--- | :--- |
+| `/health` | Public | None | No |
+| `/auth` | Public | None | Yes (`/login`, `/register`) |
+| `/companies` | JWT Bearer | `Authorization: Bearer <jwt_token>` | No |
+| `/employees` | API Key | `api-key: <api_key>` | No |
+| `/categories` | Basic Auth | `Authorization: Basic <base64(user:pass)>` | No |
 
 ---
 
 ## API Endpoints Reference
 
-### Authentication (`/auth`)
+### System Health (`/health`)
 
 | Method | Endpoint | Description | Auth Required |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/auth/register` | Register a new user account | No |
-| `POST` | `/auth/login` | Authenticate credentials and receive a JWT token | No |
-| `POST` | `/auth/logout` | Revoke current JWT token and add to LogoutToken blacklist | No |
+| `GET` | `/health` | System health check (pings DB pool, Redis, reports uptime/memory) | No |
+
+---
+
+### Authentication (`/auth`)
+
+| Method | Endpoint | Description | Auth Required | Rate Limited |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/auth/register` | Register a new user account | No | Yes (10 req / 15m) |
+| `POST` | `/auth/login` | Authenticate credentials and receive JWT | No | Yes (10 req / 15m) |
+| `POST` | `/auth/logout` | Revoke JWT token and add to Redis blacklist | No | No |
 
 ---
 

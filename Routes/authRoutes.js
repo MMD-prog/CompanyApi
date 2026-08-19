@@ -2,8 +2,11 @@ const express = require('express');
 const controller = require('../Controllers/authController');
 const { errorContext } = require('../middleware/errorHandler');
 const { validateAuth } = require('../middleware/validators');
+const rateLimiter = require('../middleware/rateLimiter');
 
 const router = express.Router();
+
+const authRateLimiter = rateLimiter({ max: 10, windowSeconds: 900, prefix: 'auth' });
 
 /**
  * @swagger
@@ -34,7 +37,7 @@ const router = express.Router();
  *       '400':
  *         description: Bad request (missing fields or duplicate username)
  */
-router.post('/register', validateAuth, errorContext('Auth.Register'), controller.register);
+router.post('/register', authRateLimiter, validateAuth, errorContext('Auth.Register'), controller.register);
 
 /**
  * @swagger
@@ -65,7 +68,7 @@ router.post('/register', validateAuth, errorContext('Auth.Register'), controller
  *       '401':
  *         description: Invalid credentials
  */
-router.post('/login', validateAuth, errorContext('Auth.Login'), controller.login);
+router.post('/login', authRateLimiter, validateAuth, errorContext('Auth.Login'), controller.login);
 
 /**
  * @swagger

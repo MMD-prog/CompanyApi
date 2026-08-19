@@ -1,3 +1,5 @@
+const { logError } = require('../lib/logger');
+
 const errorContext = (options) => {
     return (req, res, next) => {
         res.locals.errorContext = options;
@@ -6,6 +8,8 @@ const errorContext = (options) => {
 };
 
 const errorHandler = (err, req, res, next) => {
+    logError(err, req);
+
     const context = res.locals.errorContext || {};
 
     if (err.name === 'SequelizeValidationError') {
@@ -22,9 +26,10 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    return res.status(400).json({
+    const statusCode = err.status || err.statusCode || 400;
+    return res.status(statusCode).json({
         error: 'Bad Syntax',
-        message: context.fallbackMessage || 'An unexpected error occurred.'
+        message: context.fallbackMessage || err.message || 'An unexpected error occurred.'
     });
 };
 
